@@ -12,3 +12,7 @@ def login(request):
 
 def register(request):
     return render(request, "pizza/register.html")
+
+
+def menu(request):
+    return render(request, "pizza/menu.html")
