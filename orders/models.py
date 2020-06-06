@@ -1,9 +1,9 @@
 from django.db import models
 
-# Create your models here.  
+# Create your models here.
 class Topping(models.Model):
     name = models.CharField(max_length=64)
-    price = models.DecimalField(blank=True)
+    price = models.DecimalField(blank=True, max_digits=5, decimal_places=2)
 
     def __str__(self):
         print(f"{self.name}: {self.price}")
@@ -12,8 +12,8 @@ class Topping(models.Model):
 # add-ons on the subs
 class Extra(models.Model):
     name = models.CharField(max_length=64)
-    small_price = models.DecimalField()
-    large_price = models.DecimalField()
+    small_price = models.DecimalField(max_digits=5, decimal_places=2)
+    large_price = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
         print(f"{self.name} small: {self.small_price}, large: {self.large_price}")
@@ -21,8 +21,8 @@ class Extra(models.Model):
 
 class RegularPizza(models.Model):
     name = models.CharField(max_length=64)
-    small_price = models.DecimalField()
-    large_price = models.DecimalField()
+    small_price = models.DecimalField(max_digits=5, decimal_places=2)
+    large_price = models.DecimalField(max_digits=5, decimal_places=2)
     toppings = models.ManyToManyField(Topping)
 
     def __str__(self):
@@ -31,8 +31,8 @@ class RegularPizza(models.Model):
 
 class SicilianPizza(models.Model):
     name = models.CharField(max_length=64)
-    small_price = models.DecimalField()
-    large_price = models.DecimalField()
+    small_price = models.DecimalField(max_digits=5, decimal_places=2)
+    large_price = models.DecimalField(max_digits=5, decimal_places=2)
     toppings = models.ManyToManyField(Topping)
 
     def __str__(self):
@@ -41,9 +41,9 @@ class SicilianPizza(models.Model):
 
 class Sub(models.Model):
     name = models.CharField(max_length=64)
-    small_price = models.DecimalField()
-    large_price = models.DecimalField()
-    extras = models.ManyToManyField(Sub)
+    small_price = models.DecimalField(max_digits=5, decimal_places=2)
+    large_price = models.DecimalField(max_digits=5, decimal_places=2)
+    extras = models.ManyToManyField(Extra)
 
     def __str__(self):
         print(f"{self.name} small: {self.small_price}, large: {self.large_price}")
@@ -51,7 +51,7 @@ class Sub(models.Model):
 
 class Pasta(models.Model):
     name = models.CharField(max_length=64)
-    price = models.DecimalField()
+    price = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
         print(f"{self.name}: {self.price}")
@@ -59,7 +59,7 @@ class Pasta(models.Model):
 
 class Salad(models.Model):
     name = models.CharField(max_length=64)
-    price = models.DecimalField()
+    price = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
         print(f"{self.name}: {self.price}")
@@ -67,8 +67,8 @@ class Salad(models.Model):
 
 class DinnerPlatter(models.Model):
     name = models.CharField(max_length=64)
-    small_price = models.DecimalField()
-    large_price = models.DecimalField()
+    small_price = models.DecimalField(max_digits=5, decimal_places=2)
+    large_price = models.DecimalField(max_digits=5, decimal_places=2)
 
-     def __str__(self):
+    def __str__(self):
         print(f"{self.name} small: {self.small_price}, large: {self.large_price}")
