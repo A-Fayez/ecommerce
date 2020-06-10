@@ -5,7 +5,7 @@
             "label": "docker-build",
             "platform": "python",
             "dockerBuild": {
-                "tag": "project3:latest",
+                "tag": "web:latest",
                 "dockerfile": "${workspaceFolder}/Dockerfile",
                 "context": "${workspaceFolder}",
                 "pull": true

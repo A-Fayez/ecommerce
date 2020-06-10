@@ -1,0 +1,57 @@
+BEGIN;
+--
+-- Create model OrderedItem
+--
+CREATE TABLE "orders_ordereditem" ("id" serial NOT NULL PRIMARY KEY);
+CREATE TABLE "orders_ordereditem_extras" ("id" serial NOT NULL PRIMARY KEY, "ordereditem_id" integer NOT NULL, "topping_id" integer NOT NULL);
+--
+-- Create model ShoppingCart
+--
+CREATE TABLE "orders_shoppingcart" ("id" serial NOT NULL PRIMARY KEY);
+--
+-- Remove field extras from menuitem
+--
+DROP TABLE "orders_menuitem_extras" CASCADE;
+--
+-- Remove field toppings from menuitem
+--
+DROP TABLE "orders_menuitem_toppings" CASCADE;
+--
+-- Delete model Order
+--
+DROP TABLE "orders_order_items" CASCADE;
+DROP TABLE "orders_order" CASCADE;
+--
+-- Add field items to shoppingcart
+--
+CREATE TABLE "orders_shoppingcart_items" ("id" serial NOT NULL PRIMARY KEY, "shoppingcart_id" integer NOT NULL, "menuitem_id" integer NOT NULL);
+--
+-- Add field user to shoppingcart
+--
+ALTER TABLE "orders_shoppingcart" ADD COLUMN "user_id" integer NOT NULL CONSTRAINT "orders_shoppingcart_user_id_38f48ab7_fk_auth_user_id" REFERENCES "auth_user"("id") DEFERRABLE INITIALLY DEFERRED; SET CONSTRAINTS "orders_shoppingcart_user_id_38f48ab7_fk_auth_user_id" IMMEDIATE;
+--
+-- Add field item to ordereditem
+--
+ALTER TABLE "orders_ordereditem" ADD COLUMN "item_id" integer NOT NULL CONSTRAINT "orders_ordereditem_item_id_7dae8f9b_fk_orders_menuitem_id" REFERENCES "orders_menuitem"("id") DEFERRABLE INITIALLY DEFERRED; SET CONSTRAINTS "orders_ordereditem_item_id_7dae8f9b_fk_orders_menuitem_id" IMMEDIATE;
+--
+-- Add field toppings to ordereditem
+--
+CREATE TABLE "orders_ordereditem_toppings" ("id" serial NOT NULL PRIMARY KEY, "ordereditem_id" integer NOT NULL, "topping_id" integer NOT NULL);
+ALTER TABLE "orders_ordereditem_extras" ADD CONSTRAINT "orders_ordereditem_extra_ordereditem_id_topping_i_7b299a49_uniq" UNIQUE ("ordereditem_id", "topping_id");
+ALTER TABLE "orders_ordereditem_extras" ADD CONSTRAINT "orders_ordereditem_e_ordereditem_id_312a0efc_fk_orders_or" FOREIGN KEY ("ordereditem_id") REFERENCES "orders_ordereditem" ("id") DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE "orders_ordereditem_extras" ADD CONSTRAINT "orders_ordereditem_e_topping_id_d03b941b_fk_orders_to" FOREIGN KEY ("topping_id") REFERENCES "orders_topping" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "orders_ordereditem_extras_ordereditem_id_312a0efc" ON "orders_ordereditem_extras" ("ordereditem_id");
+CREATE INDEX "orders_ordereditem_extras_topping_id_d03b941b" ON "orders_ordereditem_extras" ("topping_id");
+ALTER TABLE "orders_shoppingcart_items" ADD CONSTRAINT "orders_shoppingcart_item_shoppingcart_id_menuitem_63a9fa43_uniq" UNIQUE ("shoppingcart_id", "menuitem_id");
+ALTER TABLE "orders_shoppingcart_items" ADD CONSTRAINT "orders_shoppingcart__shoppingcart_id_6b1cfb97_fk_orders_sh" FOREIGN KEY ("shoppingcart_id") REFERENCES "orders_shoppingcart" ("id") DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE "orders_shoppingcart_items" ADD CONSTRAINT "orders_shoppingcart__menuitem_id_da76c2a1_fk_orders_me" FOREIGN KEY ("menuitem_id") REFERENCES "orders_menuitem" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "orders_shoppingcart_items_shoppingcart_id_6b1cfb97" ON "orders_shoppingcart_items" ("shoppingcart_id");
+CREATE INDEX "orders_shoppingcart_items_menuitem_id_da76c2a1" ON "orders_shoppingcart_items" ("menuitem_id");
+CREATE INDEX "orders_shoppingcart_user_id_38f48ab7" ON "orders_shoppingcart" ("user_id");
+CREATE INDEX "orders_ordereditem_item_id_7dae8f9b" ON "orders_ordereditem" ("item_id");
+ALTER TABLE "orders_ordereditem_toppings" ADD CONSTRAINT "orders_ordereditem_toppi_ordereditem_id_topping_i_2944f3a4_uniq" UNIQUE ("ordereditem_id", "topping_id");
+ALTER TABLE "orders_ordereditem_toppings" ADD CONSTRAINT "orders_ordereditem_t_ordereditem_id_ad17e423_fk_orders_or" FOREIGN KEY ("ordereditem_id") REFERENCES "orders_ordereditem" ("id") DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE "orders_ordereditem_toppings" ADD CONSTRAINT "orders_ordereditem_t_topping_id_ce642372_fk_orders_to" FOREIGN KEY ("topping_id") REFERENCES "orders_topping" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE INDEX "orders_ordereditem_toppings_ordereditem_id_ad17e423" ON "orders_ordereditem_toppings" ("ordereditem_id");
+CREATE INDEX "orders_ordereditem_toppings_topping_id_ce642372" ON "orders_ordereditem_toppings" ("topping_id");
+COMMIT;

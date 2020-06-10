@@ -1,74 +1,59 @@
 from django.db import models
+from django.contrib.auth.models import User
+
 
 # Create your models here.
-class Topping(models.Model):
+class Category(models.Model):
     name = models.CharField(max_length=64)
-    price = models.DecimalField(blank=True, max_digits=5, decimal_places=2)
 
     def __str__(self):
-        print(f"{self.name}: {self.price}")
+        return self.name
 
 
 # add-ons on the subs
 class Extra(models.Model):
     name = models.CharField(max_length=64)
-    small_price = models.DecimalField(max_digits=5, decimal_places=2)
-    large_price = models.DecimalField(max_digits=5, decimal_places=2)
-
-    def __str__(self):
-        print(f"{self.name} small: {self.small_price}, large: {self.large_price}")
-
-
-class RegularPizza(models.Model):
-    name = models.CharField(max_length=64)
-    small_price = models.DecimalField(max_digits=5, decimal_places=2)
-    large_price = models.DecimalField(max_digits=5, decimal_places=2)
-    toppings = models.ManyToManyField(Topping)
-
-    def __str__(self):
-        print(f"{self.name}, small: {self.small_price}, large: {self.large_price}")
-
-
-class SicilianPizza(models.Model):
-    name = models.CharField(max_length=64)
-    small_price = models.DecimalField(max_digits=5, decimal_places=2)
-    large_price = models.DecimalField(max_digits=5, decimal_places=2)
-    toppings = models.ManyToManyField(Topping)
-
-    def __str__(self):
-        print(f"{self.name}, small: {self.small_price}, large: {self.large_price}")
-
-
-class Sub(models.Model):
-    name = models.CharField(max_length=64)
-    small_price = models.DecimalField(max_digits=5, decimal_places=2)
-    large_price = models.DecimalField(max_digits=5, decimal_places=2)
-    extras = models.ManyToManyField(Extra)
-
-    def __str__(self):
-        print(f"{self.name} small: {self.small_price}, large: {self.large_price}")
-
-
-class Pasta(models.Model):
-    name = models.CharField(max_length=64)
     price = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
-        print(f"{self.name}: {self.price}")
+        return f"{self.name}: {self.price}"
 
 
-class Salad(models.Model):
+class Topping(models.Model):
     name = models.CharField(max_length=64)
-    price = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
-        print(f"{self.name}: {self.price}")
+        return self.name
 
 
-class DinnerPlatter(models.Model):
+class MenuItem(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     name = models.CharField(max_length=64)
-    small_price = models.DecimalField(max_digits=5, decimal_places=2)
-    large_price = models.DecimalField(max_digits=5, decimal_places=2)
+    small_price = models.DecimalField(
+        max_digits=5, decimal_places=2, blank=True, null=True
+    )
+    large_price = models.DecimalField(
+        max_digits=5, decimal_places=2, blank=True, null=True
+    )
+    price = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
 
     def __str__(self):
-        print(f"{self.name} small: {self.small_price}, large: {self.large_price}")
+        return f"{self.name}, small: {self.small_price}, large: {self.large_price}"
+
+
+class OrderedItem(models.Model):
+    item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
+    toppings = models.ManyToManyField(Topping, blank=True, related_name="toppings")
+    extras = models.ManyToManyField(Topping, blank=True, related_name="extras")
+
+    def __str__(self):
+        return f"{str(item)} with {(list(toppings) or '') (list(extras) or '')}"
+
+
+# The table will contain info about all orders made by users
+class ShoppingCart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    items = models.ManyToManyField(MenuItem, related_name="ordered_items")
+
+    def __str__(self):
+        return f"Order made by: {user} and contains {list(items)}"
