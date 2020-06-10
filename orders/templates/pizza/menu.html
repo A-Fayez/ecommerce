@@ -37,7 +37,7 @@
       </thead>
       <tbody>
         {% for item in sicilians  %}
-          <tr>
+        <tr>
           <td>{{item.name}}</td>
           <td>{{item.small_price}}</td>
           <td>{{item.large_price}}</td>
@@ -53,11 +53,11 @@
         </tr>
       </thead>
       <tbody>
-       {% for item in toppings %}
+        {% for item in toppings %}
         <tr>
           <td>{{item.name}}</td>
         </tr>
-       {% endfor %}
+        {% endfor %}
       </tbody>
     </table>
 
@@ -71,17 +71,17 @@
         </tr>
       </thead>
       <tbody>
-      {% for item in subs %}
-        <tr>     
+        {% for item in subs %}
+        <tr>
           <td>{{item.name}}</td>
           <td>{{item.small_price}}</td>
           <td>{{item.large_price}}</td>
         </tr>
-      {% endfor %}
+        {% endfor %}
       </tbody>
     </table>
 
-      <table class="table table-responsive-sm">
+    <table class="table table-responsive-sm">
       <caption>Pasta</caption>
       <thead class="thead-dark">
         <tr>
@@ -90,16 +90,16 @@
         </tr>
       </thead>
       <tbody>
-      {% for item in pastas %}
-        <tr>     
+        {% for item in pastas %}
+        <tr>
           <td>{{item.name}}</td>
           <td>{{item.price}}</td>
         </tr>
-      {% endfor %}
+        {% endfor %}
       </tbody>
     </table>
 
-      <table class="table table-responsive-sm">
+    <table class="table table-responsive-sm">
       <caption>Salads</caption>
       <thead class="thead-dark">
         <tr>
@@ -108,13 +108,13 @@
         </tr>
       </thead>
       <tbody>
-      {% for item in salads %}
-        <tr>     
+        {% for item in salads %}
+        <tr>
           <td>{{item.name}}</td>
           <td>{{item.price}}</td>
-        
+
         </tr>
-      {% endfor %}
+        {% endfor %}
       </tbody>
     </table>
 
@@ -129,18 +129,16 @@
         </tr>
       </thead>
       <tbody>
-      {% for item in platters %}
-        <tr>     
+        {% for item in platters %}
+        <tr>
           <td>{{item.name}}</td>
           <td>{{item.small_price}}</td>
           <td>{{item.large_price}}</td>
         </tr>
-      {% endfor %}
+        {% endfor %}
       </tbody>
     </table>
-
-
   </div>
-  <!-- <div class="col">Shopping Cart here</div> -->
+  <div class="col">Shopping Cart here</div>
 </div>
 {% endblock body %}
