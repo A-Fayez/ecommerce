@@ -6,35 +6,23 @@
 {% block body %}
 <div class="row">
   <div class="col">
-    <table class="table table-responsive-sm">
+    <table class="table table-responsive-lg">
       <caption>Regular Pizza</caption>
       <thead class="thead-dark">
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">First</th>
-          <th scope="col">Last</th>
-          <th scope="col">Handle</th>
+          <th scope="col">Name</th>
+          <th scope="col">Small</th>
+          <th scope="col">Large</th>
         </tr>
       </thead>
       <tbody>
+        {% for item in regulars %}
         <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
+          <td>{{item.name}}</td>
+          <td>{{item.small_price}} $</td>
+          <td>{{item.large_price}} $</td>
         </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td>Larry</td>
-          <td>the Bird</td>
-          <td>@twitter</td>
-        </tr>
+        {% endfor %}
       </tbody>
     </table>
 
@@ -42,64 +30,34 @@
       <caption>Sicilian Pizza</caption>
       <thead class="thead-dark">
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">First</th>
-          <th scope="col">Last</th>
-          <th scope="col">Handle</th>
+          <th scope="col">Name</th>
+          <th scope="col">Small</th>
+          <th scope="col">Large</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
+        {% for item in sicilians  %}
+          <tr>
+          <td>{{item.name}}</td>
+          <td>{{item.small_price}}</td>
+          <td>{{item.large_price}}</td>
         </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td>Larry</td>
-          <td>the Bird</td>
-          <td>@twitter</td>
-        </tr>
+        {% endfor %}
       </tbody>
     </table>
-  </div>
-  <div class="col">
     <table class="table table-responsive-sm">
       <caption>Toppings</caption>
       <thead class="thead-dark">
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">First</th>
-          <th scope="col">Last</th>
-          <th scope="col">Handle</th>
+          <th scope="col">Name</th>
         </tr>
       </thead>
       <tbody>
+       {% for item in toppings %}
         <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
+          <td>{{item.name}}</td>
         </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td>Larry</td>
-          <td>the Bird</td>
-          <td>@twitter</td>
-        </tr>
+       {% endfor %}
       </tbody>
     </table>
 
@@ -107,33 +65,82 @@
       <caption>Subs</caption>
       <thead class="thead-dark">
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">First</th>
-          <th scope="col">Last</th>
-          <th scope="col">Handle</th>
+          <th scope="col">Name</th>
+          <th scope="col">Small</th>
+          <th scope="col">Large</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td>Mark</td>
-          <td>Otto</td>
-          <td>@mdo</td>
+      {% for item in subs %}
+        <tr>     
+          <td>{{item.name}}</td>
+          <td>{{item.small_price}}</td>
+          <td>{{item.large_price}}</td>
         </tr>
-        <tr>
-          <th scope="row">2</th>
-          <td>Jacob</td>
-          <td>Thornton</td>
-          <td>@fat</td>
-        </tr>
-        <tr>
-          <th scope="row">3</th>
-          <td>Larry</td>
-          <td>the Bird</td>
-          <td>@twitter</td>
-        </tr>
+      {% endfor %}
       </tbody>
     </table>
+
+      <table class="table table-responsive-sm">
+      <caption>Pasta</caption>
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Price</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for item in pastas %}
+        <tr>     
+          <td>{{item.name}}</td>
+          <td>{{item.price}}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+      <table class="table table-responsive-sm">
+      <caption>Salads</caption>
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Price</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for item in salads %}
+        <tr>     
+          <td>{{item.name}}</td>
+          <td>{{item.price}}</td>
+        
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+
+    <table class="table table-responsive-sm">
+      <caption>Dinner Platters</caption>
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Small</th>
+          <th scope="col">Large</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for item in platters %}
+        <tr>     
+          <td>{{item.name}}</td>
+          <td>{{item.small_price}}</td>
+          <td>{{item.large_price}}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+
+
   </div>
+  <!-- <div class="col">Shopping Cart here</div> -->
 </div>
 {% endblock body %}
