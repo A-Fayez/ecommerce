@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from .models import *
+from django.views.decorators.cache import cache_page
 
 # Create your views here.
 def index(request):
@@ -15,6 +16,8 @@ def register(request):
     return render(request, "pizza/register.html")
 
 
+# cache menu daily
+@cache_page(24 * 60 * 60)
 def menu(request):
     # utilize caching of querysets
     regulars = MenuItem.objects.filter(
