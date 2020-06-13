@@ -4,6 +4,11 @@
 {% block title %}Menu{% endblock title %}
 
 {% block body %}
+{% if user.is_authenticated %}
+<div class="alert alert-success" role="alert" style="text-align: center; margin-top: 1%;">
+  Welcome, {{user.get_username}}. Now order your favourite food!
+</div>
+{% endif %}
 <div class="row">
   <div class="col">
     <table class="table table-responsive-lg">

@@ -1,7 +1,12 @@
 {% extends 'pizza/base.html' %}
 {% block title %}Login{% endblock title %}
 {% block body %}
-<form action="" class="main-form">
+{% if invalid %}
+<div class="alert alert-danger" role="alert" style="text-align: center; margin-top: 1%;">
+  Either your email or password is incorrect.
+</div>
+{% endif %}
+<form action="{% url 'login' %}" class="main-form" method="POST">
   {% csrf_token %}
   <div class="form-group">
     <label for="username">Username or Email</label>

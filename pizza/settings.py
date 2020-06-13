@@ -50,12 +50,19 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+ROOT_URLCONF = "pizza.urls"
+
+
+AUTHENTICATION_BACKENDS = [
+    "orders.backends.EmailOrUsernameAuthBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
 # for development environment only
 CACHES = {
-    "default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache", },
+    "default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache",},
 }
 
-ROOT_URLCONF = "pizza.urls"
 
 TEMPLATES = [
     {
@@ -98,9 +105,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", },
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator", },
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator", },
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
 ]
 
 

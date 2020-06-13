@@ -1,33 +1,59 @@
-from django.http import HttpResponse, Http404
 from django.shortcuts import render
+from django.contrib.auth.models import User
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
+from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import ValidationError
-from .models import *
+from .models import (
+    Category,
+    MenuItem,
+    Topping,
+)
 from django.views.decorators.cache import cache_page
 from django.db import IntegrityError
 from .validators import validate_email_address, validate_username
+
 
 # Create your views here.
 def index(request):
     return render(request, "pizza/homepage.html")
 
 
-def login(request):
+def login_view(request):
+    if request.method == "POST":
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user=user)
+            return render(request, "pizza/menu.html")  # TODO: render necessary view
+        else:
+            return render(request, "pizza/login.html", {"invalid": True})
+
     return render(request, "pizza/login.html")
+
+
+def logout_view(request):
+    logout(request)
+    return HttpResponseRedirect(reverse("homepage"))
 
 
 def register(request):
 
     if request.method == "POST":
         try:
-            first = request.POST["firstname"]
-            last = request.POST["lastname"]
             email = request.POST["email"]
-            username = request.POST["username"]
-            password = request.POST["password"]
             validate_email_address(email)
+
+            username = request.POST["username"]
             validate_username(username)
 
-            user = User(
+            first = request.POST["firstname"]
+            last = request.POST["lastname"]
+            password = request.POST["password"]
+
+            user = User.objects.create_user(
                 first_name=first,
                 last_name=last,
                 email=email,

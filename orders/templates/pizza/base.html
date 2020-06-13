@@ -20,7 +20,11 @@
 <body>
     <div class="container-fluid">
         {% block navbar %}
+        {% if user.is_authenticated %}
+        {% include 'pizza/logged_navbar.html' %}
+        {% else %}
         {% include 'pizza/base_navbar.html' %}
+        {% endif %}
         {% endblock navbar %}
     </div>
 

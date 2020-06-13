@@ -47,7 +47,9 @@ class OrderedItem(models.Model):
     extras = models.ManyToManyField(Topping, blank=True, related_name="extras")
 
     def __str__(self):
-        return f"{self.item} with {(list(self.toppings) or '') (list(self.extras) or '')}"
+        return (
+            f"{self.item} with {(list(self.toppings) or '') (list(self.extras) or '')}"
+        )
 
 
 # The table will contain info about all orders made by users
