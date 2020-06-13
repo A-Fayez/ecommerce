@@ -47,7 +47,7 @@ class OrderedItem(models.Model):
     extras = models.ManyToManyField(Topping, blank=True, related_name="extras")
 
     def __str__(self):
-        return f"{str(item)} with {(list(toppings) or '') (list(extras) or '')}"
+        return f"{self.item} with {(list(toppings) or '') (list(self.extras) or '')}"
 
 
 # The table will contain info about all orders made by users
@@ -56,4 +56,4 @@ class ShoppingCart(models.Model):
     items = models.ManyToManyField(MenuItem, related_name="ordered_items")
 
     def __str__(self):
-        return f"Order made by: {user} and contains {list(items)}"
+        return f"Order made by: {self.user} and contains {list(self.items)}"

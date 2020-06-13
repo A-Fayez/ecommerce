@@ -1,7 +1,10 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render
+from django.core.exceptions import ValidationError
 from .models import *
 from django.views.decorators.cache import cache_page
+from django.db import IntegrityError
+from .validators import validate_email_address
 
 # Create your views here.
 def index(request):
@@ -13,6 +16,36 @@ def login(request):
 
 
 def register(request):
+
+    if request.method == "POST":
+        try:
+            first = request.POST["firstname"]
+            last = request.POST["lastname"]
+            email = request.POST["email"]
+            username = request.POST["username"]
+            password = request.POST["password"]
+            validate_email_address(email)
+
+            user = User(
+                first_name=first,
+                last_name=last,
+                email=email,
+                password=password,
+                username=username,
+            )
+            user.save()
+            return HttpResponse("User created succefully")
+
+        except IntegrityError as e:
+            print(e)
+            return HttpResponse("This username already exists")
+
+        except ValidationError as e:
+            if e.code == "duplicate":
+                return HttpResponse("This email already exists")
+
+            return HttpResponse("Invalid email address")
+
     return render(request, "pizza/register.html")
 
 

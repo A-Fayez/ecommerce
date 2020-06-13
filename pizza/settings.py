@@ -52,9 +52,7 @@ MIDDLEWARE = [
 
 # for development environment only
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-    },
+    "default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache",},
 }
 
 ROOT_URLCONF = "pizza.urls"
@@ -82,13 +80,13 @@ WSGI_APPLICATION = "pizza.wsgi.application"
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'db',
-        'PORT':5432,
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "postgres",
+        "USER": "postgres",
+        "PASSWORD": "postgres",
+        "HOST": "db",
+        "PORT": 5432,
     }
 }
 

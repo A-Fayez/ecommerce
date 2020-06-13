@@ -1,7 +1,8 @@
 {% extends 'pizza/base.html' %}
 {% block title %}Register{% endblock title %}
 {% block body %}
-<form action="" class="main-form">
+<form action="{% url 'register' %}" class="main-form" method="POST">
+    {% csrf_token %}
     <div class="row">
         <div class="col">
             <div class="form-group">
