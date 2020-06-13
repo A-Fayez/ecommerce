@@ -5,10 +5,21 @@ from django.contrib.auth.models import User
 
 
 def validate_email_address(email):
-    """Use django's custom email validation as well as checking for its uniqueness"""
+    """Use django's custom email validation as well as checking for its uniqueness
+    """
+
     validate_email(email)
-    user = User.objects.get(email=email)
-    if user is not None:
+    if User.objects.filter(email=email).exists():
         raise ValidationError(
-            _("This email is already in use"), code="duplicate",
+            _("This email is already in use"), code="email",
+        )
+
+
+def validate_username(username):
+    """Use django's custom username validation as well as checking for its uniqueness
+    """
+
+    if User.objects.filter(username=username).exists():
+        raise ValidationError(
+            _("This username is already in use"), code="username",
         )

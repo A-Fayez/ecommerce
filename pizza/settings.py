@@ -52,7 +52,7 @@ MIDDLEWARE = [
 
 # for development environment only
 CACHES = {
-    "default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache",},
+    "default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache", },
 }
 
 ROOT_URLCONF = "pizza.urls"
@@ -98,9 +98,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", },
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator", },
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator", },
 ]
 
 

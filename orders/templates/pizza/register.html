@@ -20,13 +20,15 @@
 
     <div class="form-group">
         <label for="email">E-Mail address</label>
-        <input type="text" name="email" class="form-control" required>
+        <input type="text" name="email" class="form-control {{ email_validity_class }}" required>
+        <div class="{{ email_feedback_class }}">{{ email_feedback_message }}</div>
     </div>
 
 
     <div class="form-group">
         <label for="username">Username</label>
-        <input type="text" name="username" class="form-control" required>
+        <input type="text" name="username" class="form-control {{ username_validity_class }}" required>
+        <div class="{{ username_feedback_class }}">{{ username_feedback_message }}</div>
     </div>
 
     <div class="form-group">

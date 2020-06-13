@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from .models import *
 from django.views.decorators.cache import cache_page
 from django.db import IntegrityError
-from .validators import validate_email_address
+from .validators import validate_email_address, validate_username
 
 # Create your views here.
 def index(request):
@@ -25,6 +25,7 @@ def register(request):
             username = request.POST["username"]
             password = request.POST["password"]
             validate_email_address(email)
+            validate_username(username)
 
             user = User(
                 first_name=first,
@@ -34,17 +35,27 @@ def register(request):
                 username=username,
             )
             user.save()
+            # TODO: redirect to menu
             return HttpResponse("User created succefully")
 
         except IntegrityError as e:
             print(e)
-            return HttpResponse("This username already exists")
+            context = {
+                "username_validity_class": "is-invalid",
+                "username_feedback_class": "invalid-feedback",
+                "username_feedback_message": "This username already exists",
+            }
+            return render(request, "pizza/register.html", context)
 
         except ValidationError as e:
-            if e.code == "duplicate":
-                return HttpResponse("This email already exists")
 
-            return HttpResponse("Invalid email address")
+            context = {
+                f"{e.code}_validity_class": "is-invalid",
+                f"{e.code}_feedback_class": "invalid-feedback",
+                f"{e.code}_feedback_message": e.message,
+            }
+
+            return render(request, "pizza/register.html", context)
 
     return render(request, "pizza/register.html")
 
