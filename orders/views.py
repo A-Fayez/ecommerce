@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.core.exceptions import ValidationError
@@ -27,7 +27,7 @@ def login_view(request):
 
         if user is not None:
             login(request, user=user)
-            return render(request, "pizza/menu.html")  # TODO: render necessary view
+            return HttpResponseRedirect(reverse("menu"))
         else:
             return render(request, "pizza/login.html", {"invalid": True})
 
@@ -61,8 +61,9 @@ def register(request):
                 username=username,
             )
             user.save()
-            # TODO: redirect to menu
-            return HttpResponse("User created succefully")
+            authenticate(request, username=username, password=password)
+            login(request, user)
+            return HttpResponseRedirect(reverse("menu"))
 
         except IntegrityError as e:
             print(e)
