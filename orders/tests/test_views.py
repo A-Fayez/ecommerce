@@ -107,19 +107,21 @@ class RegisterTestCase(TestCase):
         """
 
         self.user_data["username"] = "john_doe123"
+        self.user_data["email"] = "valid_email@domain.com"
         posting_data_response = self.c.post(
             reverse("register"), self.user_data, follow=False
         )
         redirect_response = self.c.post(
             reverse("register"), self.user_data, follow=True,
         )
-        print(self.user_data)
+
         self.assertEqual(posting_data_response.status_code, 302)
         self.assertTrue("john_doe123" in str(redirect_response.content))
 
     def test_invalid_username(self):
         # wrong username field (i.e. contains whitespaces)
         self.user_data["username"] = "john doe123"
+        self.user_data["email"] = "valid_email@domain.com"
         response = self.c.post(reverse("register"), self.user_data, follow=True,)
         self.assertEqual(response.context["username_validity_class"], "is-invalid")
         self.assertEqual(
@@ -132,8 +134,26 @@ class RegisterTestCase(TestCase):
 
         # duplicate username
         self.user_data["username"] = "nnn"
+        self.user_data["email"] = "valid_email@domain.com"
         response = self.c.post(reverse("register"), self.user_data, follow=True,)
         self.assertEqual(
             response.context["username_feedback_message"],
             "This username already exists",
+        )
+
+    def test_invalid_email(self):
+        # duplicate email
+        self.user_data["username"] = "john_doe123"
+        self.user_data["email"] = "test@test.com"  # duplicate in fixtures
+        response = self.c.post(reverse("register"), self.user_data, follow=True,)
+        self.assertEqual(
+            response.context["email_feedback_message"], "This email is already in use",
+        )
+
+        # invalid email format
+        self.user_data["username"] = "john_doe123"
+        self.user_data["email"] = "Wrong email"
+        response = self.c.post(reverse("register"), self.user_data, follow=True,)
+        self.assertEqual(
+            response.context["email_feedback_message"], "Invalid email format",
         )

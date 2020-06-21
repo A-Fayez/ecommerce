@@ -8,7 +8,13 @@ def validate_email_address(email):
     """Use django's custom email validation as well as checking for its uniqueness
     """
 
-    validate_email(email)
+    try:
+        validate_email(email)
+    except ValidationError:
+        raise ValidationError(
+            _("Invalid email format"), code="email",
+        )
+
     if User.objects.filter(email=email).exists():
         raise ValidationError(
             _("This email is already in use"), code="email",
