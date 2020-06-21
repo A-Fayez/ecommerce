@@ -19,7 +19,8 @@ def validate_username(username):
     """Use django's custom username validation as well as checking for its uniqueness
     """
 
-    if User.objects.filter(username=username).exists():
+    if " " in username:
         raise ValidationError(
-            _("This username is already in use"), code="username",
+            _("Invalid username: username mustn't have whitespaces in it"),
+            code="username",
         )

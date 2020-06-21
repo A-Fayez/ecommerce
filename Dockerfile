@@ -4,6 +4,3 @@ WORKDIR /usr/src/app
 
 ADD requirements.txt /usr/src/app
 RUN python -m pip install -r requirements.txt
-
-
-

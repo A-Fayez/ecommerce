@@ -1,11 +1,10 @@
 from django.test import TestCase, Client
 from django.urls import reverse
-
-# from orders.models import Category
+from orders.models import Category, MenuItem, Topping
+from django.test.utils import override_settings
 
 
 class HomepageTestCase(TestCase):
-
     def test_response(self):
         c = Client()
         response = c.get(reverse("homepage"))
@@ -14,9 +13,127 @@ class HomepageTestCase(TestCase):
 
 class MenuTestCase(TestCase):
     fixtures = ["orders_testdata.json"]
+    categories = Category.objects.values_list("name", flat=True)
+    c = Client()
+    response = c.get(reverse("menu"))
 
-    def test_index(self):
-        c = Client()
-        response = c.get(reverse("menu"))
+    regulars = MenuItem.objects.values_list("name", flat=True).filter(
+        category_id=Category.objects.get(name="Regular Pizza").pk
+    )
+    sicilians = MenuItem.objects.values_list("name", flat=True).filter(
+        category_id=Category.objects.get(name="Sicilian Pizza").pk
+    )
+    toppings = Topping.objects.values_list("name", flat=True)
+    subs = MenuItem.objects.values_list("name", flat=True).filter(
+        category_id=Category.objects.get(name="Subs").pk
+    )
+    pastas = MenuItem.objects.values_list("name", flat=True).filter(
+        category_id=Category.objects.get(name="Pasta").pk
+    )
+    salads = MenuItem.objects.values_list("name", flat=True).filter(
+        category_id=Category.objects.get(name="Salads").pk
+    )
+    platters = MenuItem.objects.values_list("name", flat=True).filter(
+        category_id=Category.objects.get(name="Dinner Platters").pk
+    )
+
+    # testing all categories of the pinochio's menu
+    def test_response_code(self):
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_pinochio_menu_categories(self):
+        self.assertTrue(
+            all(category in str(self.response.content) for category in self.categories)
+        )
+
+    def test_regular_pizzas(self):
+
+        self.assertTrue(
+            all(
+                str(regular_pizza) in str(self.response.content)
+                for regular_pizza in self.regulars
+            )
+        )
+
+    def test_sicilian_pizzas(self):
+        self.assertTrue(
+            all(
+                str(sicilian_pizza) in str(self.response.content)
+                for sicilian_pizza in self.sicilians
+            )
+        )
+
+    def test_pastas(self):
+        self.assertTrue(
+            all(str(pasta) in str(self.response.content) for pasta in self.pastas)
+        )
+
+    def test_salads(self):
+        self.assertTrue(
+            all(str(salad) in str(self.response.content) for salad in self.salads)
+        )
+
+    def test_platters(self):
+        self.assertTrue(
+            all(platter in str(self.response.content) for platter in self.platters)
+        )
+
+
+@override_settings(
+    AUTHENTICATION_BACKENDS=("orders.backends.EmailOrUsernameAuthBackend",)
+)
+class RegisterTestCase(TestCase):
+
+    fixtures = ["orders_testdata.json"]
+    c = Client()
+    # a holder object to avoid duplicating code
+    # only change the keys that are tested
+    user_data = {
+        "firstname": "John Doe",
+        "lastname": "Doe",
+        "email": "valid_email@domain.com",
+        "username": "john_doe123",
+        "password": "strongpw123",
+    }
+
+    def test_register_page_response(self):
+        response = self.c.get(reverse("register"))
         self.assertEqual(response.status_code, 200)
-        self.assertTrue("Regular Pizza" in str(response.content))
+
+    def test_valid_registeration(self):
+        """first we test posting the data to return redirect
+        then we test the content of the redirected response that will contain the
+        greeting message asserting a successful registration
+        """
+
+        self.user_data["username"] = "john_doe123"
+        posting_data_response = self.c.post(
+            reverse("register"), self.user_data, follow=False
+        )
+        redirect_response = self.c.post(
+            reverse("register"), self.user_data, follow=True,
+        )
+        print(self.user_data)
+        self.assertEqual(posting_data_response.status_code, 302)
+        self.assertTrue("john_doe123" in str(redirect_response.content))
+
+    def test_invalid_username(self):
+        # wrong username field (i.e. contains whitespaces)
+        self.user_data["username"] = "john doe123"
+        response = self.c.post(reverse("register"), self.user_data, follow=True,)
+        self.assertEqual(response.context["username_validity_class"], "is-invalid")
+        self.assertEqual(
+            response.context["username_feedback_class"], "invalid-feedback"
+        )
+        self.assertEqual(
+            response.context["username_feedback_message"],
+            "Invalid username: username mustn't have whitespaces in it",
+        )
+
+        # duplicate username
+        self.user_data["username"] = "nnn"
+        response = self.c.post(reverse("register"), self.user_data, follow=True,)
+        self.assertEqual(
+            response.context["username_feedback_message"],
+            "This username already exists",
+        )
