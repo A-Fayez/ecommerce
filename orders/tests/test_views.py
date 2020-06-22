@@ -2,17 +2,17 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from orders.models import Category, MenuItem, Topping
 from django.test.utils import override_settings
-from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
 
 
-class HomepageTestCase(TestCase):
+class HomepageViewTestCase(TestCase):
     def test_response(self):
         c = Client()
         response = c.get(reverse("homepage"))
         self.assertEqual(response.status_code, 200)
 
 
-class MenuTestCase(TestCase):
+class MenuTestViewCase(TestCase):
     fixtures = ["orders_testdata.json"]
     categories = Category.objects.values_list("name", flat=True)
     c = Client()
@@ -83,7 +83,7 @@ class MenuTestCase(TestCase):
 @override_settings(
     AUTHENTICATION_BACKENDS=("orders.backends.EmailOrUsernameAuthBackend",)
 )
-class RegisterTestCase(TestCase):
+class RegisterViewTestCase(TestCase):
 
     fixtures = ["orders_testdata.json"]
     c = Client()
@@ -97,7 +97,7 @@ class RegisterTestCase(TestCase):
         "password": "strongpw123",
     }
 
-    def test_register_page_response(self):
+    def test_response(self):
         response = self.c.get(reverse("register"))
         self.assertEqual(response.status_code, 200)
 
@@ -109,6 +109,7 @@ class RegisterTestCase(TestCase):
 
         self.user_data["username"] = "john_doe123"
         self.user_data["email"] = "valid_email@domain.com"
+
         posting_data_response = self.c.post(
             reverse("register"), self.user_data, follow=False
         )
@@ -116,6 +117,7 @@ class RegisterTestCase(TestCase):
             reverse("register"), self.user_data, follow=True,
         )
 
+        # redirecting to menu view and welcome the new user
         self.assertEqual(posting_data_response.status_code, 302)
         self.assertTrue("john_doe123" in str(redirect_response.content))
 
@@ -124,22 +126,23 @@ class RegisterTestCase(TestCase):
         self.user_data["username"] = "john doe123"
         self.user_data["email"] = "valid_email@domain.com"
 
-        with self.assertRaises(ValidationError):
-            response = self.c.post(reverse("register"), self.user_data, follow=True,)
+        response = self.c.post(reverse("register"), self.user_data, follow=True,)
 
-            self.assertEqual(response.context["username_validity_class"], "is-invalid")
-            self.assertEqual(
-                response.context["username_feedback_class"], "invalid-feedback"
-            )
-            self.assertEqual(
-                response.context["username_feedback_message"],
-                "Invalid username: username mustn't have whitespaces in it",
-            )
+        self.assertEqual(response.context["username_validity_class"], "is-invalid")
+        self.assertEqual(
+            response.context["username_feedback_class"], "invalid-feedback"
+        )
+        self.assertEqual(
+            response.context["username_feedback_message"],
+            "Invalid username: username mustn't have whitespaces in it",
+        )
 
         # duplicate username
         self.user_data["username"] = "nnn"
         self.user_data["email"] = "valid_email@domain.com"
+
         response = self.c.post(reverse("register"), self.user_data, follow=True,)
+
         self.assertEqual(
             response.context["username_feedback_message"],
             "This username already exists",
@@ -164,4 +167,55 @@ class RegisterTestCase(TestCase):
 
         self.assertEqual(
             response.context["email_feedback_message"], "Invalid email format",
+        )
+
+
+@override_settings(DEBUG=True)
+class LoginViewTestCase(TestCase):
+    fixtures = ["orders_testdata.json"]
+    c = Client()
+
+    def setUp(self):
+
+        user = User.objects.create_user(
+            first_name="john",
+            last_name="doe",
+            email="john@gmail.com",
+            password="john123",
+            username="johnd",
+        )
+        user.save()
+
+    def test_response(self):
+        response = self.c.get(reverse("login"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_valid_login(self):
+
+        # test login with email
+        login_with_email_response = self.c.post(
+            reverse("login"), {"username": "john@gmail.com", "password": "john123"},
+        )
+        self.assertEqual(login_with_email_response.status_code, 302)
+        self.c.logout()
+
+        # test login with username
+        login_with_username_response = self.c.post(
+            reverse("login"), {"username": "johnd", "password": "john123"},
+        )
+        self.assertEqual(login_with_username_response.status_code, 302)
+        self.c.logout()
+
+        # test follow up redirection after successful login
+        response = self.c.post(
+            reverse("login"), {"username": "johnd", "password": "john123"}, follow=True,
+        )
+        self.assertEqual(response.status_code, 200)
+
+    def test_invalid_login(self):
+        response = self.c.post(
+            reverse("login"), {"username": "johnd", "password": "wrongpw"},
+        )
+        self.assertTrue(
+            "Either your email or password is incorrect." in str(response.content)
         )

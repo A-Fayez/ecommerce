@@ -2,15 +2,19 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.contrib.auth import authenticate, login, logout
-from orders.validators import EmailValidationError
+from django.contrib.auth import login, logout, authenticate
+from orders.validators import (
+    validate_login_key,
+    LoginError,
+    UsernameValidationError,
+    EmailValidationError,
+)
 from .models import (
     Category,
     MenuItem,
     Topping,
 )
 from django.views.decorators.cache import cache_page
-from django.db import IntegrityError
 from .validators import validate_email_address, validate_username
 
 
@@ -23,12 +27,20 @@ def login_view(request):
     if request.method == "POST":
         username = request.POST["username"]
         password = request.POST["password"]
-        user = authenticate(request, username=username, password=password)
 
-        if user is not None:
-            login(request, user=user)
-            return HttpResponseRedirect(reverse("menu"))
-        else:
+        try:
+            validate_login_key(username)  # Throws a LoginError
+
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                login(request, user=user)
+                return HttpResponseRedirect(reverse("menu"))
+            else:
+                return render(request, "pizza/login.html", {"invalid": True})
+
+        except LoginError as e:
+            print(e)
             return render(request, "pizza/login.html", {"invalid": True})
 
     return render(request, "pizza/login.html")
@@ -56,26 +68,26 @@ def register(request):
             user = User.objects.create_user(
                 first_name=first,
                 last_name=last,
-                email=email,
-                password=password,
                 username=username,
+                password=password,
+                email=email,
             )
             user.save()
             authenticate(request, username=username, password=password)
             login(request, user)
             return HttpResponseRedirect(reverse("menu"))
 
-        except IntegrityError as e:
+        except UsernameValidationError as e:
             print(e)
             context = {
-                "username_validity_class": "is-invalid",
-                "username_feedback_class": "invalid-feedback",
-                "username_feedback_message": "This username already exists",
+                f"{e.code}_validity_class": "is-invalid",
+                f"{e.code}_feedback_class": "invalid-feedback",
+                f"{e.code}_feedback_message": e.message,
             }
             return render(request, "pizza/register.html", context)
 
         except EmailValidationError as e:
-
+            print(e)
             context = {
                 f"{e.code}_validity_class": "is-invalid",
                 f"{e.code}_feedback_class": "invalid-feedback",
