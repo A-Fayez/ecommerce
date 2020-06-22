@@ -4,20 +4,28 @@ from django.core.validators import validate_email
 from django.contrib.auth.models import User
 
 
+class EmailValidationError(ValidationError):
+    def __init__(self, email, message, code="email"):
+        self.email = email
+        self.message = message
+        self.code = code
+        super().__init__(self.message, code=code)
+
+
 def validate_email_address(email):
     """Use django's custom email validation as well as checking for its uniqueness
     """
 
     try:
         validate_email(email)
-    except ValidationError:
-        raise ValidationError(
-            _("Invalid email format"), code="email",
-        )
+    except ValidationError as err:
+        raise EmailValidationError(
+            email, message=_("Invalid email format"), code="email",
+        ) from err
 
     if User.objects.filter(email=email).exists():
-        raise ValidationError(
-            _("This email is already in use"), code="email",
+        raise EmailValidationError(
+            email, message=_("This email is already in use"), code="email",
         )
 
 
