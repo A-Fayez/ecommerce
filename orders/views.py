@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
-from django.core.exceptions import ValidationError
+from orders.validators import EmailValidationError
 from .models import (
     Category,
     MenuItem,
@@ -74,7 +74,7 @@ def register(request):
             }
             return render(request, "pizza/register.html", context)
 
-        except ValidationError as e:
+        except EmailValidationError as e:
 
             context = {
                 f"{e.code}_validity_class": "is-invalid",

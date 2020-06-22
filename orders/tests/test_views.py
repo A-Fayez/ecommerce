@@ -2,6 +2,7 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from orders.models import Category, MenuItem, Topping
 from django.test.utils import override_settings
+from django.core.exceptions import ValidationError
 
 
 class HomepageTestCase(TestCase):
@@ -122,15 +123,18 @@ class RegisterTestCase(TestCase):
         # wrong username field (i.e. contains whitespaces)
         self.user_data["username"] = "john doe123"
         self.user_data["email"] = "valid_email@domain.com"
-        response = self.c.post(reverse("register"), self.user_data, follow=True,)
-        self.assertEqual(response.context["username_validity_class"], "is-invalid")
-        self.assertEqual(
-            response.context["username_feedback_class"], "invalid-feedback"
-        )
-        self.assertEqual(
-            response.context["username_feedback_message"],
-            "Invalid username: username mustn't have whitespaces in it",
-        )
+
+        with self.assertRaises(ValidationError):
+            response = self.c.post(reverse("register"), self.user_data, follow=True,)
+
+            self.assertEqual(response.context["username_validity_class"], "is-invalid")
+            self.assertEqual(
+                response.context["username_feedback_class"], "invalid-feedback"
+            )
+            self.assertEqual(
+                response.context["username_feedback_message"],
+                "Invalid username: username mustn't have whitespaces in it",
+            )
 
         # duplicate username
         self.user_data["username"] = "nnn"
@@ -145,7 +149,9 @@ class RegisterTestCase(TestCase):
         # duplicate email
         self.user_data["username"] = "john_doe123"
         self.user_data["email"] = "test@test.com"  # duplicate in fixtures
+
         response = self.c.post(reverse("register"), self.user_data, follow=True,)
+
         self.assertEqual(
             response.context["email_feedback_message"], "This email is already in use",
         )
@@ -153,7 +159,9 @@ class RegisterTestCase(TestCase):
         # invalid email format
         self.user_data["username"] = "john_doe123"
         self.user_data["email"] = "Wrong email"
+
         response = self.c.post(reverse("register"), self.user_data, follow=True,)
+
         self.assertEqual(
             response.context["email_feedback_message"], "Invalid email format",
         )
