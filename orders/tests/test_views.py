@@ -10,6 +10,9 @@ class HomepageViewTestCase(TestCase):
         c = Client()
         response = c.get(reverse("homepage"))
         self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "pizza/homepage.html")
+        self.assertEqual(response["content-type"], "text/html; charset=utf-8")
+        self.assertTrue(response.content.endswith(b"</html>"))
 
 
 class MenuTestViewCase(TestCase):
@@ -39,19 +42,25 @@ class MenuTestViewCase(TestCase):
     )
 
     # testing all categories of the pinochio's menu
-    def test_response_code(self):
+    def test_response(self):
         self.assertEqual(self.response.status_code, 200)
+        self.assertTemplateUsed(self.response, "pizza/menu.html")
+        self.assertEqual(self.response["content-type"], "text/html; charset=utf-8")
+        self.assertTrue(self.response.content.endswith(b"</html>"))
 
     def test_pinochio_menu_categories(self):
         self.assertTrue(
-            all(category in str(self.response.content) for category in self.categories)
+            all(
+                bytes(category, encoding="utf-8") in self.response.content
+                for category in self.categories
+            )
         )
 
     def test_regular_pizzas(self):
 
         self.assertTrue(
             all(
-                str(regular_pizza) in str(self.response.content)
+                bytes(regular_pizza, encoding="utf-8") in self.response.content
                 for regular_pizza in self.regulars
             )
         )
@@ -59,24 +68,33 @@ class MenuTestViewCase(TestCase):
     def test_sicilian_pizzas(self):
         self.assertTrue(
             all(
-                str(sicilian_pizza) in str(self.response.content)
+                bytes(sicilian_pizza, encoding="utf-8") in self.response.content
                 for sicilian_pizza in self.sicilians
             )
         )
 
     def test_pastas(self):
         self.assertTrue(
-            all(str(pasta) in str(self.response.content) for pasta in self.pastas)
+            all(
+                bytes(pasta, encoding="utf-8") in self.response.content
+                for pasta in self.pastas
+            )
         )
 
     def test_salads(self):
         self.assertTrue(
-            all(str(salad) in str(self.response.content) for salad in self.salads)
+            all(
+                bytes(salad, encoding="utf-8") in self.response.content
+                for salad in self.salads
+            )
         )
 
     def test_platters(self):
         self.assertTrue(
-            all(platter in str(self.response.content) for platter in self.platters)
+            all(
+                bytes(platter, encoding="utf-8") in self.response.content
+                for platter in self.platters
+            )
         )
 
 
@@ -101,6 +119,10 @@ class RegisterViewTestCase(TestCase):
         response = self.c.get(reverse("register"))
         self.assertEqual(response.status_code, 200)
 
+        self.assertTemplateUsed(response, "pizza/register.html")
+        self.assertEqual(response["content-type"], "text/html; charset=utf-8")
+        self.assertTrue(response.content.endswith(b"</html>"))
+
     def test_valid_registeration(self):
         """first we test posting the data to return redirect
         then we test the content of the redirected response that will contain the
@@ -119,7 +141,7 @@ class RegisterViewTestCase(TestCase):
 
         # redirecting to menu view and welcome the new user
         self.assertEqual(posting_data_response.status_code, 302)
-        self.assertTrue("john_doe123" in str(redirect_response.content))
+        self.assertIn(b"john_doe123", redirect_response.content)
 
     def test_invalid_username(self):
         # wrong username field (i.e. contains whitespaces)
@@ -189,6 +211,10 @@ class LoginViewTestCase(TestCase):
     def test_response(self):
         response = self.c.get(reverse("login"))
         self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "pizza/login.html")
+
+        self.assertEqual(response["content-type"], "text/html; charset=utf-8")
+        self.assertTrue(response.content.endswith(b"</html>"))
 
     def test_valid_login(self):
 
@@ -216,6 +242,4 @@ class LoginViewTestCase(TestCase):
         response = self.c.post(
             reverse("login"), {"username": "johnd", "password": "wrongpw"},
         )
-        self.assertTrue(
-            "Either your email or password is incorrect." in str(response.content)
-        )
+        self.assertIn(b"Either your email or password is incorrect.", response.content)
