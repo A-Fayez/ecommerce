@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
+from django.core.exceptions import ValidationError
 
 
 # Create your models here.
@@ -37,8 +39,20 @@ class MenuItem(models.Model):
     )
     price = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
 
+    # A menu item must have at least a price
+    def clean(self):
+        super().clean()
+
+        if not self.small_price and not self.large_price and not self.price:
+            raise ValidationError(_("A menu Item must have at least one price"))
+
     def __str__(self):
-        return f"{self.name}, small: {self.small_price}, large: {self.large_price}"
+
+        if not self.price:
+            return f"{self.name}, small: {self.small_price}, large: {self.large_price}"
+
+        if not self.small_price and not self.large_price:
+            return f"{self.name}, price: {self.price}"
 
 
 class OrderedItem(models.Model):
