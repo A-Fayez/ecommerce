@@ -3,6 +3,7 @@ version: '3.4'
 services:
   db:
     image: postgres
+    container_name: db
     environment: 
       - POSTGRES_NAME=postgres
       - POSTGRES_USER=postgres 
@@ -10,6 +11,7 @@ services:
 
   migration:
     build: .
+    container_name: migration
     command: python3 manage.py migrate
     volumes:
       - .:/usr/src/app
@@ -19,7 +21,7 @@ services:
 
   web:
     build: .
-    container_name: webserver
+    container_name: web
     command: python3 manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/usr/src/app
