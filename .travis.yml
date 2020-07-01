@@ -5,5 +5,8 @@ python:
 services:
   - docker
 
+before_script:
+    - docker-compose up
+
 script:
   - docker-compose run web sh -c "python manage.py test && flake8 ."

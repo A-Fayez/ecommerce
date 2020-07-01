@@ -35,4 +35,5 @@ class MenuItemTestCase(TestCase):
             name="test", category=Category.objects.create(name="Pizza")
         )
         with self.assertRaises(ValidationError):
+            a.clean()
             a.save()
