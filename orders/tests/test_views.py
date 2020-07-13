@@ -15,7 +15,7 @@ class HomepageViewTestCase(TestCase):
         self.assertTrue(response.content.endswith(b"</html>"))
 
 
-class MenuTestViewCase(TestCase):
+class MenuViewTestCase(TestCase):
     fixtures = ["orders_testdata.json"]
     categories = Category.objects.values_list("name", flat=True)
     c = Client()

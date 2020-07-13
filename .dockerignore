@@ -1,5 +1,11 @@
 __pycache__
+
 .git
+.gitignore
+
 .vscode
 db.sqlite3
 README.md
+
+Dockerfile
+.dockerignore
