@@ -21,7 +21,7 @@ install:
   - pip3 install -r requirements.txt
 
 script:
-  - docker-compose run web sh -c "python3 manage.py test orders/tests/test_auth_backends.py orders/tests/test_validators.py && flake8 ."
+  - docker-compose run web sh -c "python3 manage.py test orders/tests/test_validators.py && flake8 ."
 
 after_script:
   - docker images
