@@ -2,14 +2,14 @@ version: '3.4'
 
 services:
   db:
-    image: postgres
+    image: postgres:latest
     container_name: db
     environment: 
       - POSTGRES_NAME=postgres
       - POSTGRES_USER=postgres 
       - POSTGRES_PASSWORD=postgres
 
-      
+ 
   migration:
     build: .
     container_name: migration

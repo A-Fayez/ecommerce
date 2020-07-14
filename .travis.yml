@@ -27,7 +27,7 @@ before_install:
 
 script:
   - docker-compose build
-  - docker-compose run web sh -c "python3 manage.py test && flake8 ."
+  - docker-compose run web sh -c "python3 manage.py test orders.tests && flake8 ."
 
 after_script:
   - docker images

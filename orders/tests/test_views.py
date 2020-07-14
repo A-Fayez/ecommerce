@@ -16,7 +16,7 @@ class HomepageViewTestCase(TestCase):
 
 
 class MenuViewTestCase(TestCase):
-    fixtures = ["orders_testdata.json"]
+    # fixtures = ["orders_testdata.json"]
     categories = Category.objects.values_list("name", flat=True)
     c = Client()
     response = c.get(reverse("menu"))
