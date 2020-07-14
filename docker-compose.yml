@@ -9,12 +9,11 @@ services:
       - POSTGRES_USER=postgres 
       - POSTGRES_PASSWORD=postgres
 
+      
   migration:
     build: .
     container_name: migration
-    
     command: python3 manage.py migrate
-    
     volumes:
       - .:/usr/src/app
     depends_on: 
