@@ -11,10 +11,10 @@ env:
   - DOCKER_COMPOSE_VERSION=1.25.4
 
 install:
-  - pip install -r requirements.txt
+  - pip3 install -r requirements.txt
 
 script:
-  - docker-compose run web sh -c "python manage.py test && flake8 ."
+  - docker-compose run web sh -c "python3 manage.py test && flake8 ."
 
 after_script:
   - docker images
