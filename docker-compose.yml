@@ -13,9 +13,8 @@ services:
     build: .
     container_name: migration
     
-    command: > 
-      bash -c " python3 manage.py makemigrations orders 
-                && python3 manage.py migrate"
+    command: python3 manage.py migrate"
+    
     volumes:
       - .:/usr/src/app
     depends_on: 
