@@ -24,6 +24,8 @@ before_install:
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
 
+before_script:
+  - docker-compose run web sh -c "python3 manage.py loaddata orders_testdata.json"
 
 script:
   - docker-compose build
