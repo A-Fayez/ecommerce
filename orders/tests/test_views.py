@@ -15,8 +15,9 @@ class HomepageViewTestCase(TestCase):
         self.assertTrue(response.content.endswith(b"</html>"))
 
 
-class MenuTestViewCase(TestCase):
+class MenuViewTestCase(TestCase):
     fixtures = ["orders_testdata.json"]
+
     categories = Category.objects.values_list("name", flat=True)
     c = Client()
     response = c.get(reverse("menu"))
@@ -104,6 +105,7 @@ class MenuTestViewCase(TestCase):
 class RegisterViewTestCase(TestCase):
 
     fixtures = ["orders_testdata.json"]
+
     c = Client()
     # a holder object to avoid duplicating code
     # only change the keys that are tested
@@ -194,11 +196,12 @@ class RegisterViewTestCase(TestCase):
 
 @override_settings(DEBUG=True)
 class LoginViewTestCase(TestCase):
+
     fixtures = ["orders_testdata.json"]
+
     c = Client()
 
     def setUp(self):
-
         user = User.objects.create_user(
             first_name="john",
             last_name="doe",
