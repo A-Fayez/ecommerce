@@ -103,28 +103,17 @@ def menu(request):
     menu_dict = {}
     items = MenuItem.objects.all()
     categories = Category.objects.all()
-    # utilize caching of querysets
-    # regulars = MenuItem.objects.filter(
-    #     category_id=Category.objects.get(name="Regular Pizza").pk
-    # )
-    # sicilians = MenuItem.objects.filter(
-    #     category_id=Category.objects.get(name="Sicilian Pizza").pk
-    # )
-    # toppings = Topping.objects.all()
-    # subs = MenuItem.objects.filter(category_id=Category.objects.get(name="Subs").pk)
-    # pastas = MenuItem.objects.filter(category_id=Category.objects.get(name="Pasta").pk)
-    # salads = MenuItem.objects.filter(category_id=Category.objects.get(name="Salads").pk)
-    # platters = MenuItem.objects.filter(
-    #     category_id=Category.objects.get(name="Dinner Platters").pk
-    # )
 
     for category in categories:
-        menu_dict.update({category.name: items.filter(category_id=Category.objects.get(name=category.name).pk)})
-        test = items.filter(category_id=Category.objects.get(name=category.name).pk)
+        menu_dict.update(
+            {
+                category.name: items.filter(
+                    category_id=Category.objects.get(name=category.name).pk
+                )
+            }
+        )
 
-    print(menu_dict)
     context = {
         "menu": menu_dict,
     }
-    print(list(categories))
     return render(request, "pizza/menu.html", context)
