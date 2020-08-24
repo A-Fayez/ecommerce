@@ -1,6 +1,6 @@
 from django.test import TestCase, Client
 from django.urls import reverse
-from orders.models import Category, MenuItem, Topping
+from orders.models import Category, MenuItem
 from django.test.utils import override_settings
 from django.contrib.auth.models import User
 
@@ -28,7 +28,6 @@ class MenuViewTestCase(TestCase):
     sicilians = MenuItem.objects.values_list("name", flat=True).filter(
         category_id=Category.objects.get(name="Sicilian Pizza").pk
     )
-    toppings = Topping.objects.values_list("name", flat=True)
     subs = MenuItem.objects.values_list("name", flat=True).filter(
         category_id=Category.objects.get(name="Subs").pk
     )
@@ -125,7 +124,7 @@ class RegisterViewTestCase(TestCase):
         self.assertEqual(response["content-type"], "text/html; charset=utf-8")
         self.assertTrue(response.content.endswith(b"</html>"))
 
-    def test_valid_registeration(self):
+    def test_valid_registration(self):
         """first we test posting the data to return redirect
         then we test the content of the redirected response that will contain the
         greeting message asserting a successful registration

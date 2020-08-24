@@ -8,25 +8,6 @@ from django.core.exceptions import ValidationError
 class Category(models.Model):
     name = models.CharField(max_length=64)
 
-    class Meta:
-        db_table = "orders_category"
-
-    def __str__(self):
-        return self.name
-
-
-# add-ons on the subs
-class Extra(models.Model):
-    name = models.CharField(max_length=64)
-    price = models.DecimalField(max_digits=5, decimal_places=2)
-
-    def __str__(self):
-        return f"{self.name}: {self.price}"
-
-
-class Topping(models.Model):
-    name = models.CharField(max_length=64)
-
     def __str__(self):
         return self.name
 
@@ -35,12 +16,14 @@ class MenuItem(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     name = models.CharField(max_length=64)
     small_price = models.DecimalField(
-        max_digits=5, decimal_places=2, blank=True, null=True
+        max_digits=5, decimal_places=2, blank=True, null=True, default=0.0
     )
     large_price = models.DecimalField(
-        max_digits=5, decimal_places=2, blank=True, null=True
+        max_digits=5, decimal_places=2, blank=True, null=True, default=0.0
     )
-    price = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    price = models.DecimalField(
+        max_digits=5, decimal_places=2, blank=True, null=True, default=0.0
+    )
 
     # A menu item must have at least a price
     def clean(self):
@@ -50,23 +33,25 @@ class MenuItem(models.Model):
             raise ValidationError(_("A menu Item must have at least one price"))
 
     def __str__(self):
+        return self.name
 
-        if not self.price:
-            return f"{self.name}, small: {self.small_price}, large: {self.large_price}"
 
-        if not self.small_price and not self.large_price:
-            return f"{self.name}, price: {self.price}"
+class Extra(models.Model):
+    name = models.CharField(max_length=64)
+    price = models.DecimalField(
+        max_digits=5, decimal_places=2, blank=True, null=True, default=0.0
+    )
+
+    def __str__(self):
+        return self.name
 
 
 class OrderedItem(models.Model):
     item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
-    toppings = models.ManyToManyField(Topping, blank=True, related_name="toppings")
-    extras = models.ManyToManyField(Topping, blank=True, related_name="extras")
+    extras = models.ManyToManyField(Extra, blank=True, related_name="extras")
 
     def __str__(self):
-        return (
-            f"{self.item} with {(list(self.toppings) or '') (list(self.extras) or '')}"
-        )
+        return f"{self.item} with {(list(self.extras) or '')}"
 
 
 # The table will contain info about all orders made by users
