@@ -102,19 +102,23 @@ class HomepageViewTestCase(TestCase):
     AUTHENTICATION_BACKENDS=("orders.backends.EmailOrUsernameAuthBackend",)
 )
 class RegisterViewTestCase(TestCase):
-
-    fixtures = ["orders_testdata.json"]
-
     c = Client()
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.user_data = {
+            "firstname": "John Doe",
+            "lastname": "Doe",
+            "email": "valid_email@domain.com",
+            "username": "john_doe123",
+            "password": "strongpw123",
+        }
+
+    def setUp(self):
+        User.objects.create_user("duplicate", "duplicate@domain.com", "dup")
+
     # a holder object to avoid duplicating code
     # only change the keys that are tested
-    user_data = {
-        "firstname": "John Doe",
-        "lastname": "Doe",
-        "email": "valid_email@domain.com",
-        "username": "john_doe123",
-        "password": "strongpw123",
-    }
 
     def test_response(self):
         response = self.c.get(reverse("register"))
@@ -130,14 +134,14 @@ class RegisterViewTestCase(TestCase):
         greeting message asserting a successful registration
         """
 
-        self.user_data["username"] = "john_doe123"
-        self.user_data["email"] = "valid_email@domain.com"
+        self.__class__.user_data["username"] = "john_doe123"
+        self.__class__.user_data["email"] = "valid_email@domain.com"
 
         posting_data_response = self.c.post(
-            reverse("register"), self.user_data, follow=False
+            reverse("register"), self.__class__.user_data, follow=False
         )
         redirect_response = self.c.post(
-            reverse("register"), self.user_data, follow=True,
+            reverse("register"), self.__class__.user_data, follow=True,
         )
 
         # redirecting to menu view and welcome the new user
@@ -146,8 +150,8 @@ class RegisterViewTestCase(TestCase):
 
     def test_invalid_username(self):
         # wrong username field (i.e. contains whitespaces)
-        self.user_data["username"] = "john doe123"
-        self.user_data["email"] = "valid_email@domain.com"
+        self.__class__.user_data["username"] = "john doe123"
+        self.__class__.user_data["email"] = "valid_email@domain.com"
 
         response = self.c.post(reverse("register"), self.user_data, follow=True,)
 
@@ -161,10 +165,12 @@ class RegisterViewTestCase(TestCase):
         )
 
         # duplicate username
-        self.user_data["username"] = "nnn"
-        self.user_data["email"] = "valid_email@domain.com"
+        self.__class__.user_data["username"] = "duplicate"
+        self.__class__.user_data["email"] = "dup@domain.com"
 
-        response = self.c.post(reverse("register"), self.user_data, follow=True,)
+        response = self.c.post(
+            reverse("register"), self.__class__.user_data, follow=True,
+        )
 
         self.assertEqual(
             response.context["username_feedback_message"],
@@ -173,18 +179,22 @@ class RegisterViewTestCase(TestCase):
 
     def test_invalid_email(self):
         # duplicate email
-        self.user_data["username"] = "john_doe123"
-        self.user_data["email"] = "test@test.com"  # duplicate in fixtures
+        self.__class__.user_data["username"] = "john_doe123"
+        self.__class__.user_data[
+            "email"
+        ] = "duplicate@domain.com"  # duplicate in fixtures
 
-        response = self.c.post(reverse("register"), self.user_data, follow=True,)
+        response = self.c.post(
+            reverse("register"), self.__class__.user_data, follow=True,
+        )
 
         self.assertEqual(
             response.context["email_feedback_message"], "This email is already in use",
         )
 
         # invalid email format
-        self.user_data["username"] = "john_doe123"
-        self.user_data["email"] = "Wrong email"
+        self.__class__.user_data["username"] = "john_doe123"
+        self.__class__.user_data["email"] = "Wrong email"
 
         response = self.c.post(reverse("register"), self.user_data, follow=True,)
 
@@ -195,9 +205,6 @@ class RegisterViewTestCase(TestCase):
 
 @override_settings(DEBUG=True)
 class LoginViewTestCase(TestCase):
-
-    fixtures = ["orders_testdata.json"]
-
     c = Client()
 
     def setUp(self):
