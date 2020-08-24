@@ -14,7 +14,6 @@ from .models import (
     MenuItem,
     Topping,
 )
-from django.views.decorators.cache import cache_page
 from .validators import validate_email_address, validate_username
 
 
@@ -100,7 +99,7 @@ def register(request):
 
 
 # cache menu daily
-@cache_page(24 * 60 * 60)
+# @cache_page(24 * 60 * 60)
 def menu(request):
     # utilize caching of querysets
     regulars = MenuItem.objects.filter(

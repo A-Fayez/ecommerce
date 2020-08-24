@@ -94,7 +94,6 @@ DATABASES = {
         "PASSWORD": "postgres",
         "HOST": "db",
         "PORT": 5432,
-        "TEST": {"ENGINE": "django.db.backends.sqlite3"},
     }
 }
 

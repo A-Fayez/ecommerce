@@ -9,24 +9,13 @@ services:
       - POSTGRES_USER=postgres 
       - POSTGRES_PASSWORD=postgres
 
- 
-  migration:
-    build: .
-    container_name: migration
-    command: python3 manage.py migrate
-    volumes:
-      - .:/code
-    depends_on: 
-      - db
-
-
   web:
     build: .
     container_name: web
-    command: python3 manage.py runserver 0.0.0.0:8000
+    entrypoint: /code/bin/docker-entrypoint.sh
     volumes:
       - .:/code
     ports:
       - "8000:8000"
     depends_on: 
-      - migration
+      - db
