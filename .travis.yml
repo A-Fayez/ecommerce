@@ -25,11 +25,11 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
 
 before_script:
-  - docker-compose run web sh -c "python3 manage.py loaddata orders_testdata.json"
+  - docker-compose -f docker-compose.test.yml run web sh -c "python3 manage.py loaddata orders_testdata.json"
 
 script:
-  - docker-compose build
-  - docker-compose run web sh -c "python3 manage.py test orders.tests && flake8 ."
+  - docker-compose -f docker-compose.test.yml build
+  - docker-compose -f docker-compose.test.yml run web sh -c "python3 manage.py test orders.tests && flake8 ."
 
 after_script:
   - docker images
