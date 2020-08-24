@@ -17,19 +17,9 @@ before_install:
   - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
   - sudo apt-get update
   - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
-  
-  # updating docker-compose
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
-
-before_script:
-  - docker-compose run web sh -c "python3 manage.py loaddata orders_testdata.json"
 
 script:
-  - docker-compose build
-  - docker-compose run web sh -c "python3 manage.py test orders.tests && flake8 ."
+  - docker build -f Dockerfile.test . --tag test:0.1
 
 after_script:
   - docker images

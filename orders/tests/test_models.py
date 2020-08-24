@@ -18,8 +18,8 @@ class MenuItemTestCase(TestCase):
         a = MenuItem.objects.get(pk=1)
         b = MenuItem.objects.get(pk=2)
 
-        self.assertEqual(str(a), "test, small: 5.00, large: 10.00")
-        self.assertEqual(str(b), "foo, price: 15.00")
+        self.assertEqual(str(a), "test")
+        self.assertEqual(str(b), "foo")
 
     def test_foreign_keys(self):
         a = MenuItem.objects.get(pk=1)

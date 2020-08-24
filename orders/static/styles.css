@@ -21,6 +21,12 @@ table {
   border: 2px solid #343A40;
 }
 
+table td:first-child {
+  width: 20em;
+  min-width: 20em;
+  max-width: 20em;
+}
+
 table caption {
   caption-side: top;
   margin: auto;

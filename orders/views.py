@@ -12,7 +12,6 @@ from orders.validators import (
 from .models import (
     Category,
     MenuItem,
-    Topping,
 )
 from .validators import validate_email_address, validate_username
 
@@ -101,28 +100,20 @@ def register(request):
 # cache menu daily
 # @cache_page(24 * 60 * 60)
 def menu(request):
-    # utilize caching of querysets
-    regulars = MenuItem.objects.filter(
-        category_id=Category.objects.get(name="Regular Pizza").pk
-    )
-    sicilians = MenuItem.objects.filter(
-        category_id=Category.objects.get(name="Sicilian Pizza").pk
-    )
-    toppings = Topping.objects.all()
-    subs = MenuItem.objects.filter(category_id=Category.objects.get(name="Subs").pk)
-    pastas = MenuItem.objects.filter(category_id=Category.objects.get(name="Pasta").pk)
-    salads = MenuItem.objects.filter(category_id=Category.objects.get(name="Salads").pk)
-    platters = MenuItem.objects.filter(
-        category_id=Category.objects.get(name="Dinner Platters").pk
-    )
+    menu_dict = {}
+    items = MenuItem.objects.all()
+    categories = Category.objects.all()
+
+    for category in categories:
+        menu_dict.update(
+            {
+                category.name: items.filter(
+                    category_id=Category.objects.get(name=category.name).pk
+                )
+            }
+        )
 
     context = {
-        "regulars": regulars,
-        "sicilians": sicilians,
-        "toppings": toppings,
-        "subs": subs,
-        "pastas": pastas,
-        "salads": salads,
-        "platters": platters,
+        "menu": menu_dict,
     }
     return render(request, "pizza/menu.html", context)
