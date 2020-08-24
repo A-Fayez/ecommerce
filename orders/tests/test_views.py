@@ -1,6 +1,5 @@
 from django.test import TestCase, Client
 from django.urls import reverse
-from orders.models import Category, MenuItem
 from django.test.utils import override_settings
 from django.contrib.auth.models import User
 
