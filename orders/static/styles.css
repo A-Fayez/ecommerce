@@ -37,3 +37,12 @@ table caption {
   text-align: center;
   border: 2px solid #343A40;
 }
+
+ion-icon {
+  color: white;
+}
+
+li.cart span{
+  position: relative;
+  bottom: 20%;
+}
