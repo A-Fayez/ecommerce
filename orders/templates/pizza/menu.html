@@ -1,6 +1,8 @@
 <!-- This will change after creating menu models, pass menu items as a context object -->
 
-{% extends 'pizza/base.html' %} {% block title %}Menu{% endblock title %} 
+{% extends 'pizza/base.html' %} {% block title %}Menu{% endblock title %}
+{% load static %}
+
 {%block body %} {% if user.is_authenticated %}
 <div
   class="alert alert-success"
@@ -24,22 +26,26 @@
           <th scope="col">Small</th>
           <th scope="col">Large</th>
             <th scope="col">Price</th>
+            <th class="fit">Buy</th>
         </tr>
   </thead>
         <tbody>
         {% for item in items %}
         <tr>
           <td>{{item}}</td>
-          <td>{% firstof item.small_price "-" %}</td>
+          <td>{% firstof item.small_price "-" %}
+          </td>
           <td>{% firstof item.large_price "-" %}</td>
         <td>{% firstof item.price "-" %}</td>
+        <td class="fit"><button type="button" class="btn btn-primary btn-sm add-to-cart">Add to Cart</button></td>
         </tr>
         {% endfor %}
       </tbody>
   </table>
   {% endfor %}
-
   </div>
-  <div class="col">Shopping Cart here</div>
 </div>
 {% endblock body %}
+{% block footer %}
+    <script src="{% static "js/menu.js" %}"></script>
+{% endblock footer %}

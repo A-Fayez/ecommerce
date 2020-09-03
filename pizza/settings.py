@@ -54,7 +54,7 @@ ROOT_URLCONF = "pizza.urls"
 
 
 AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.ModelBackend",
+    # "django.contrib.auth.backends.ModelBackend",
     "orders.backends.EmailOrUsernameAuthBackend",
 ]
 

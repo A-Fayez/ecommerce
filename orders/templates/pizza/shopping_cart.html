@@ -1,0 +1,39 @@
+{% extends "pizza/base.html" %}
+{% load static %}
+{% block title %}Cart{% endblock title %}
+{% block body %}
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Product</th>
+      <th scope="col">Price</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Increment/decrease</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Mark</td>
+      <td>Otto</td>
+      <td>@mdo</td>
+    </tr>
+    <tr>
+      <th scope="row">2</th>
+      <td>Jacob</td>
+      <td>Thornton</td>
+      <td>@fat</td>
+    </tr>
+    <tr>
+      <th scope="row">3</th>
+      <td>Larry</td>
+      <td>the Bird</td>
+      <td>@twitter</td>
+    </tr>
+  </tbody>
+</table>
+    <button type="button" class="btn btn-success btn-sm add-to-cart">Checkout</button>
+{% endblock %}
+{% block footer %}
+    <script src="{% static "js/menu.js" %}"></script>
+{% endblock footer %}

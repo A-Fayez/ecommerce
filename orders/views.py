@@ -100,6 +100,8 @@ def register(request):
 # cache menu daily
 # @cache_page(24 * 60 * 60)
 def menu(request):
+    print(request.COOKIES["sessionid"])
+
     menu_dict = {}
     items = MenuItem.objects.all()
     categories = Category.objects.all()
@@ -117,3 +119,7 @@ def menu(request):
         "menu": menu_dict,
     }
     return render(request, "pizza/menu.html", context)
+
+
+def cart(request):
+    return render(request, "pizza/shopping_cart.html")
