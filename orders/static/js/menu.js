@@ -1,7 +1,3 @@
-// var cart = {};
-// cart.cartItems = [];
-// localStorage.setItem("cart", JSON.stringify(cart));
-
 document.addEventListener("DOMContentLoaded", () => {
   if (localStorage.getItem("cart-items-count")) {
     document.querySelector("a span.items-count").innerHTML = localStorage
@@ -39,32 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
         totalPrice: itemPrice * itemQuantity,
       };
 
-      // check if user clicked on an already clicked-before item
-      // increment its quantity and update totals
-      // const duplicate = cart.cartItems.some(
-      //   (el) =>
-      //     el.itemName === cartItem.itemName && el.itemID === cartItem.itemID
-      // );
-      // if (duplicate) {
-      //   const oldItem = cart.cartItems.find(
-      //     (el) =>
-      //       el.itemName === cartItem.itemName && el.itemID === cartItem.itemID
-      //   );
-      //   cart.cartItems.push({
-      //     itemID: itemID,
-      //     itemName: itemName,
-      //     itemPrice: itemPrice,
-      //     itemQuantity: itemQuantity + oldItem.itemQuantity,
-      //     totalPrice: itemPrice * itemQuantity + oldItem.totalPrice,
-      //   });
-      // } else {
-      //   cart.cartItems.push(cartItem);
-      //   console.log(cart);
-      // }
-
-      // cart.cartItems.push(cartItem);
-      // localStorage.setItem("cart", JSON.stringify(cart));
-      // console.log(cart);
       let cart = getCart();
       addItemToCart(cartItem, cart);
       saveCart(cart);
@@ -77,14 +47,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // adds an item to the local storage cart items array that is inside cart key in local storage
 function addItemToCart(item, cart) {
-  // here a user added a previously-aded item, so we only update quantity and total
-  // cart.cartItems = cart.cartItems.filter((originalItem) => {
-  //   if (item.itemID === originalItem.itemID && item.itemName === originalItem.itemName) {
-  //     originalItem.itemQuantity = originalItem.itemQuantity + parseInt(item.itemQuantity);
-  //     originalItem.totalPrice = originalItem.itemQuantity * item.itemPrice;
-  //     return true;
-  //   }
-  // });
   for (let i = 0; i < cart.cartItems.length; i++) {
     if (
       item.itemID === cart.cartItems[i].itemID &&
@@ -95,12 +57,12 @@ function addItemToCart(item, cart) {
 
       cart.cartItems[i].totalPrice = cart.cartItems[i].itemQuantity * item.itemPrice;
       return;
-      //cart.cartItems.splice(i, 1);
     }
   }
   cart.cartItems.push(item);
 }
 
+// helper functions
 function getCart() {
   if (localStorage.getItem("cart")) {
     return JSON.parse(localStorage.getItem("cart"));
@@ -116,20 +78,8 @@ function saveCart(cart) {
   // calculate total
   let total = 0;
   cart.cartItems.forEach((item) => {
-    total = total + parseFLoat(item.totalPrice);
+    total = total + parseFloat(item.totalPrice);
   });
   cart.total = total;
   localStorage.setItem("cart", JSON.stringify(cart));
 }
-
-//   let cart = {
-//     "cartItems": [
-//       {
-//         "itemName": "",
-//         "itemID": "",
-//         price: "",
-//         quantity: "",
-//       },
-//     ],
-//     total: 50,
-//   };
