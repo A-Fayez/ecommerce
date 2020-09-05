@@ -100,7 +100,7 @@ def register(request):
 # cache menu daily
 # @cache_page(24 * 60 * 60)
 def menu(request):
-    print(request.COOKIES["sessionid"])
+    # print(request.COOKIES["sessionid"])
 
     menu_dict = {}
     items = MenuItem.objects.all()

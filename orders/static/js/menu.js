@@ -1,25 +1,87 @@
+// var cart = {};
+// cart.cartItems = [];
+// localStorage.setItem("cart", JSON.stringify(cart));
+
 document.addEventListener("DOMContentLoaded", () => {
-    let itemsCountElement = document.querySelector("a span.items-count").innerHTML;
-    let itemsCount = parseInt(itemsCountElement);
-    document.querySelectorAll("button.add-to-cart")
-        .forEach(function(button) {
-            button.addEventListener("click", function()  {
-                // update numbers of item in a cart
-                // localStorage.setItem("itemsCount")
-                itemsCount++;
-                document.querySelector("a span.items-count").innerHTML = itemsCount.toString();
+  if (localStorage.getItem("cart-items-count")) {
+    document.querySelector(
+      "a span.items-count"
+    ).innerHTML = localStorage.getItem("cart-items-count").toString();
+  }
 
-                // test sessions
-                fetch("/session")
-                    .then(response => console.log(response));
+  //   let cart = {
+  //     "cart-items": [
+  //       {
+  //         "itemName": "",
+  //         "itemID": "",
+  //         price: "",
+  //         quantity: "",
+  //       },
+  //     ],
+  //     total: 50,
+  //   };
 
+  let itemsCountElement = document.querySelector("a span.items-count")
+    .innerHTML;
+  let itemsCount = parseInt(itemsCountElement);
+  document.querySelectorAll("button.add-to-cart").forEach(function (button) {
+    button.addEventListener("click", function () {
+      // update numbers of item in a cart
+      itemsCount++;
+      localStorage.setItem("cart-items-count", itemsCount);
+      document.querySelector(
+        "a span.items-count"
+      ).innerHTML = localStorage.getItem("cart-items-count").toString();
 
-                // get cart-item node
-                console.log(this.parentElement.parentElement.children[0].innerHTML); //name
-                console.log(this.parentElement.parentElement.children[1].innerHTML) // small
-                console.log(this.parentElement.parentElement.children[2].innerHTML) // large
-                console.log(this.parentElement.parentElement.children[3].innerHTML === "-" ? "0.0" : this.parentElement.parentElement.children[3].innerHTML) // price
+      // get the selected item info
+      const quantitySelection = document.querySelector(`#${this.name}-select`);
+      const itemQuantity = parseInt(
+        quantitySelection.options[quantitySelection.selectedIndex].value
+      );
+      const itemPrice = parseFloat(
+        document.querySelector(`#${this.name}-price`).innerHTML
+      );
+      const itemName = this.name;
+      const itemID = this.id;
 
-            })
-    })
-})
+      const cartItem = {
+        itemID: itemID,
+        itemName: itemName,
+        itemPrice: itemPrice,
+        itemQuantity: itemQuantity,
+        totalPrice: itemPrice * itemQuantity,
+      };
+
+      // check if user clicked on an already clicked-before item
+      // increment its quantity and update totals
+      // const duplicate = cart.cartItems.some(
+      //   (el) =>
+      //     el.itemName === cartItem.itemName && el.itemID === cartItem.itemID
+      // );
+      // if (duplicate) {
+      //   console.log("zobr");
+      //   const oldItem = cart.cartItems.find(
+      //     (el) =>
+      //       el.itemName === cartItem.itemName && el.itemID === cartItem.itemID
+      //   );
+      //   cart.cartItems.push({
+      //     itemID: itemID,
+      //     itemName: itemName,
+      //     itemPrice: itemPrice,
+      //     itemQuantity: itemQuantity + oldItem.itemQuantity,
+      //     totalPrice: itemPrice * itemQuantity + oldItem.totalPrice,
+      //   });
+      // } else {
+      //   console.log("zobr");
+      //   cart.cartItems.push(cartItem);
+      //   console.log(cart);
+      // }
+
+      cart.cartItems.push(cartItem);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      console.log(cart);
+      this.disabled = true;
+      alert("Check your cart for extra modification");
+    });
+  });
+});

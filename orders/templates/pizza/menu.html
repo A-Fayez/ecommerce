@@ -16,6 +16,8 @@
   <div class="col">
 
   {% for category, items in menu.items %}
+    {% for item in items %}
+
   <table class="table table-responsive-lg">
       <caption>
           {{ category }}
@@ -23,25 +25,49 @@
        <thead class="thead-dark">
         <tr>
           <th scope="col">Name</th>
-          <th scope="col">Small</th>
-          <th scope="col">Large</th>
+
+          {% if item.price %}
             <th scope="col">Price</th>
-            <th class="fit">Buy</th>
+          {% endif %}
+
+          <th scope="col">Quantity</th>
+
+          <th>Buy</th>
         </tr>
   </thead>
         <tbody>
-        {% for item in items %}
-        <tr>
-          <td>{{item}}</td>
-          <td>{% firstof item.small_price "-" %}
+          <tr id="{{item|cut:" "}}" name={{item}}>
+            <td>{{item}}</td>
+            <td id="{{ item|cut:" "}}-price">{% firstof item.price "-" %}</td>
+            <td>
+              <select id="{{item|cut:" "}}-select">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+              </select>
+            </td>
+          <td>
+            <button
+              name={{item|cut:" "}}
+              type="button" 
+              class="btn btn-primary btn-sm add-to-cart"
+              id="{{item.id}}"
+              >Add to Cart
+            </button>
           </td>
-          <td>{% firstof item.large_price "-" %}</td>
-        <td>{% firstof item.price "-" %}</td>
-        <td class="fit"><button type="button" class="btn btn-primary btn-sm add-to-cart">Add to Cart</button></td>
-        </tr>
-        {% endfor %}
+
+          </tr>
       </tbody>
   </table>
+          {% endfor %}
+
   {% endfor %}
   </div>
 </div>

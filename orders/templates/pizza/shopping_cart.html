@@ -6,17 +6,17 @@
   <thead>
     <tr>
       <th scope="col">Product</th>
-      <th scope="col">Price</th>
       <th scope="col">Quantity</th>
+      <th scope="col">Price</th>
       <th scope="col">Increment/decrease</th>
     </tr>
   </thead>
-  <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
+  <tbody class="cart-table">
+     {% comment %} <tr>
+      <th scope="row">Cheese</th>
+      <td>5</td>
+      <td>20.5</td>
+      <td><button class="increment">+</button><button class="decrement">-</button></td>
     </tr>
     <tr>
       <th scope="row">2</th>
@@ -29,11 +29,11 @@
       <td>Larry</td>
       <td>the Bird</td>
       <td>@twitter</td>
-    </tr>
+    </tr>   {% endcomment %}
   </tbody>
 </table>
-    <button type="button" class="btn btn-success btn-sm add-to-cart">Checkout</button>
+    <button type="button" class="btn btn-success btn-sm checkout">Checkout</button>
 {% endblock %}
 {% block footer %}
-    <script src="{% static "js/menu.js" %}"></script>
+    <script src="{% static "js/cart.js" %}"></script>
 {% endblock footer %}
