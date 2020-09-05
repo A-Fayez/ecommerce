@@ -89,11 +89,18 @@ function getCart() {
   }
   let cart = {};
   cart.cartItems = [];
+  cart.total = 0;
   localStorage.setItem("cart", JSON.stringify(cart));
   return cart;
 }
 
 function saveCart(cart) {
+  // calculate total
+  let total = 0;
+  cart.cartItems.forEach((item) => {
+    total = total + item.totalPrice;
+  });
+  cart.total = total;
   localStorage.setItem("cart", JSON.stringify(cart));
 }
 

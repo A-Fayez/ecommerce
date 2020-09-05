@@ -18,13 +18,13 @@ body {
 
 table {
   margin-top: 5%;
-  border: 2px solid #343A40;
+  border: 2px solid #343a40;
 }
 
 .table td.fit,
 .table th.fit {
-    white-space: nowrap;
-    width: 1%;
+  white-space: nowrap;
+  width: 1%;
 }
 
 table td:first-child {
@@ -36,19 +36,29 @@ table td:first-child {
 table caption {
   caption-side: top;
   margin: auto;
-  background:#E9ECEF;
+  background: #e9ecef;
   font-weight: bold;
   font-size: 1.1em;
   color: black;
   text-align: center;
-  border: 2px solid #343A40;
+  border: 2px solid #343a40;
 }
 
 ion-icon {
   color: white;
 }
 
-li.cart span{
+li.cart span {
   position: relative;
   bottom: 20%;
+}
+
+td.inc-dec-column {
+  display: flex;
+  justify-content: left;
+}
+
+button.increase,
+button.decrease {
+  margin-right: 2em;
 }

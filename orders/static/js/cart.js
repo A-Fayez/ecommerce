@@ -23,12 +23,13 @@ document.addEventListener("DOMContentLoaded", () => {
     row.appendChild(priceColumn);
 
     const incDecColumn = document.createElement("td");
+    incDecColumn.classList.add("inc-dec-column");
     row.appendChild(incDecColumn);
     const incButton = document.createElement("button");
     const decButton = document.createElement("button");
-    incButton.classList.add("increase");
+    incButton.classList.add("increase", "btn", "btn-success");
     incButton.innerHTML = "+";
-    decButton.classList.add("decrease");
+    decButton.classList.add("decrease", "btn", "btn-danger");
     decButton.innerHTML = "-";
     incDecColumn.appendChild(incButton);
     incDecColumn.appendChild(decButton);
