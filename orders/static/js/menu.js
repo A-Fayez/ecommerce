@@ -77,6 +77,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // adds an item to the local storage cart items array that is inside cart key in local storage
 function addItemToCart(item, cart) {
+  // here a user added a previously-aded item, so we only update quantity and total
+  // cart.cartItems = cart.cartItems.filter((originalItem) => {
+  //   if (item.itemID === originalItem.itemID && item.itemName === originalItem.itemName) {
+  //     originalItem.itemQuantity = originalItem.itemQuantity + parseInt(item.itemQuantity);
+  //     originalItem.totalPrice = originalItem.itemQuantity * item.itemPrice;
+  //     return true;
+  //   }
+  // });
+  for (let i = 0; i < cart.cartItems.length; i++) {
+    if (
+      item.itemID === cart.cartItems[i].itemID &&
+      item.itemName === cart.cartItems[i].itemName
+    ) {
+      cart.cartItems[i].itemQuantity =
+        cart.cartItems[i].itemQuantity + parseInt(item.itemQuantity);
+
+      cart.cartItems[i].totalPrice = cart.cartItems[i].itemQuantity * item.itemPrice;
+      return;
+      //cart.cartItems.splice(i, 1);
+    }
+  }
   cart.cartItems.push(item);
 }
 

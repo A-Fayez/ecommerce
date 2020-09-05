@@ -4,6 +4,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // populate cart table
   const table = document.querySelector("tbody.cart-table");
 
+  // break early and not populate duplicate table entries
+  // cart.cartItems.forEach(function (item) {
+  //   // skip creating new item entries for previously-created items
+  //   document.querySelectorAll("button.increase").forEach(button => {
+  //     if
+  //   })
+
+  // new item added to cart
   cart.cartItems.forEach(function (item) {
     const row = document.createElement("tr");
     table.appendChild(row);
@@ -41,33 +49,34 @@ document.addEventListener("DOMContentLoaded", () => {
     decButton.innerHTML = "-";
     incDecColumn.appendChild(decButton);
   });
-
-  // control increment and decrease of quantity items
-  // A bug in calculating total
-  document.querySelectorAll("button.increase, button.decrease").forEach((button) => {
-    // configure increase buttons
-    if (button.classList.item(0) === "increase") {
-      button.addEventListener("click", function () {
-        console.log(`${this.getAttribute("id")} - ${this.getAttribute("name")}`);
-        console.log(this.getAttribute("data-quantity"));
-        // TODO: set new attribute
-
-        let quantity = parseInt(this.getAttribute("data-quantity")) + 1;
-        updateCart(this.getAttribute("id"), this.getAttribute("name"), quantity);
-      });
-    }
-  });
-
-  //update basket number
-  document.querySelector("a span.items-count").innerHTML = localStorage
-    .getItem("cart-items-count")
-    .toString();
-
-  //testing
-  document
-    .querySelector("button.checkout")
-    .addEventListener("click", function (event) {});
 });
+
+// control increment and decrease of quantity items
+// A bug in calculating total
+document.querySelectorAll("button.increase, button.decrease").forEach((button) => {
+  // configure increase buttons
+  if (button.classList.item(0) === "increase") {
+    button.addEventListener("click", function () {
+      console.log(`${this.getAttribute("id")} - ${this.getAttribute("name")}`);
+      console.log(this.getAttribute("data-quantity"));
+      // TODO: set new attribute
+
+      let quantity = parseInt(this.getAttribute("data-quantity")) + 1;
+      button.setAttribute("data-quantity", quantity);
+      updateCart(this.getAttribute("id"), this.getAttribute("name"), quantity);
+    });
+  } else if (button.classList.item(0) === "decrease") {
+    // configure decrease button
+  }
+});
+
+//update basket number
+document.querySelector("a span.items-count").innerHTML = localStorage
+  .getItem("cart-items-count")
+  .toString();
+
+//testing
+document.querySelector("button.checkout").addEventListener("click", function (event) {});
 
 function updateCart(id, name, newQuantity) {
   let cart = JSON.parse(localStorage.getItem("cart"));
