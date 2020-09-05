@@ -4,22 +4,21 @@
 
 document.addEventListener("DOMContentLoaded", () => {
   if (localStorage.getItem("cart-items-count")) {
-    document.querySelector(
-      "a span.items-count"
-    ).innerHTML = localStorage.getItem("cart-items-count").toString();
+    document.querySelector("a span.items-count").innerHTML = localStorage
+      .getItem("cart-items-count")
+      .toString();
   }
 
-  let itemsCountElement = document.querySelector("a span.items-count")
-    .innerHTML;
+  let itemsCountElement = document.querySelector("a span.items-count").innerHTML;
   let itemsCount = parseInt(itemsCountElement);
   document.querySelectorAll("button.add-to-cart").forEach(function (button) {
     button.addEventListener("click", function () {
       // update numbers of item in a cart
       itemsCount++;
       localStorage.setItem("cart-items-count", itemsCount);
-      document.querySelector(
-        "a span.items-count"
-      ).innerHTML = localStorage.getItem("cart-items-count").toString();
+      document.querySelector("a span.items-count").innerHTML = localStorage
+        .getItem("cart-items-count")
+        .toString();
 
       // get the selected item info
       const quantitySelection = document.querySelector(`#${this.name}-select`);
@@ -47,7 +46,6 @@ document.addEventListener("DOMContentLoaded", () => {
       //     el.itemName === cartItem.itemName && el.itemID === cartItem.itemID
       // );
       // if (duplicate) {
-      //   console.log("zobr");
       //   const oldItem = cart.cartItems.find(
       //     (el) =>
       //       el.itemName === cartItem.itemName && el.itemID === cartItem.itemID
@@ -60,7 +58,6 @@ document.addEventListener("DOMContentLoaded", () => {
       //     totalPrice: itemPrice * itemQuantity + oldItem.totalPrice,
       //   });
       // } else {
-      //   console.log("zobr");
       //   cart.cartItems.push(cartItem);
       //   console.log(cart);
       // }
