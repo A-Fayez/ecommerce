@@ -9,18 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ).innerHTML = localStorage.getItem("cart-items-count").toString();
   }
 
-  //   let cart = {
-  //     "cart-items": [
-  //       {
-  //         "itemName": "",
-  //         "itemID": "",
-  //         price: "",
-  //         quantity: "",
-  //       },
-  //     ],
-  //     total: 50,
-  //   };
-
   let itemsCountElement = document.querySelector("a span.items-count")
     .innerHTML;
   let itemsCount = parseInt(itemsCountElement);
@@ -77,11 +65,46 @@ document.addEventListener("DOMContentLoaded", () => {
       //   console.log(cart);
       // }
 
-      cart.cartItems.push(cartItem);
-      localStorage.setItem("cart", JSON.stringify(cart));
-      console.log(cart);
+      // cart.cartItems.push(cartItem);
+      // localStorage.setItem("cart", JSON.stringify(cart));
+      // console.log(cart);
+      let cart = getCart();
+      addItemToCart(cartItem, cart);
+      saveCart(cart);
+      console.log(getCart);
       this.disabled = true;
       alert("Check your cart for extra modification");
     });
   });
 });
+
+// adds an item to the local storage cart items array that is inside cart key in local storage
+function addItemToCart(item, cart) {
+  cart.cartItems.push(item);
+}
+
+function getCart() {
+  if (localStorage.getItem("cart")) {
+    return JSON.parse(localStorage.getItem("cart"));
+  }
+  let cart = {};
+  cart.cartItems = [];
+  localStorage.setItem("cart", JSON.stringify(cart));
+  return cart;
+}
+
+function saveCart(cart) {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+//   let cart = {
+//     "cartItems": [
+//       {
+//         "itemName": "",
+//         "itemID": "",
+//         price: "",
+//         quantity: "",
+//       },
+//     ],
+//     total: 50,
+//   };
