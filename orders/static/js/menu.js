@@ -116,7 +116,7 @@ function saveCart(cart) {
   // calculate total
   let total = 0;
   cart.cartItems.forEach((item) => {
-    total = total + item.totalPrice;
+    total = total + parseFLoat(item.totalPrice);
   });
   cart.total = total;
   localStorage.setItem("cart", JSON.stringify(cart));
