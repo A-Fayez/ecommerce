@@ -55,30 +55,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const name = button.getAttribute("name");
         let item = cart.cartItems.find((el) => el.itemName === name && el.itemID === id);
         // let quantity = parseInt(item.itemQuantity) + 1;
-        button.setAttribute("data-quantity", item.itemQuantity);
-
-        // updateCart(id, name, quantity);
-        cart.cartItems.forEach((item) => {
-          if (item.itemID === id && item.itemName === name) {
-            item.itemQuantity = parseInt(item.itemQuantity) + 1;
-            item.totalPrice = item.itemPrice * parseInt(item.itemQuantity) + 1;
-          }
-        });
-        // update total and save cart state
-        let total = 0;
-        cart.cartItems.forEach((item) => {
-          total = total + item.totalPrice;
-        });
-        cart.total = total;
+        button.setAttribute("data-quantity", item.itemQuantity + 1);
 
         // update UI
-
         button.parentElement.previousElementSibling.previousElementSibling.innerHTML =
-          item.itemQuantity; //quantity
+          parseInt(item.itemQuantity) + 1; //quantity
         button.parentElement.previousElementSibling.innerHTML =
-          parseFloat(item.itemPrice) * parseInt(item.itemQuantity); //price
+          parseFloat(item.itemPrice) * parseInt(item.itemQuantity) + 1; //price
 
-        localStorage.setItem("cart", JSON.stringify(cart));
+        updateCart(id, name, item.itemQuantity, (increase = true));
       });
     } else if (button.classList.item(0) === "decrease") {
       // configure decrease button
@@ -90,33 +75,15 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("clicked dec");
 
         // let quantity = parseInt(item.itemQuantity) - 1;
-        button.setAttribute("data-quantity", item.itemQuantity);
-
-        // updateCart(id, name, quantity);
-        cart.cartItems.forEach((item) => {
-          if (item.itemID === id && item.itemName === name) {
-            item.itemQuantity = parseInt(item.itemQuantity) - 1;
-            item.totalPrice = item.itemPrice * parseInt(item.itemQuantity) - 1;
-          }
-        });
-        // update total and save cart state
-        let total = 0;
-        cart.cartItems.forEach((item) => {
-          total = total + item.totalPrice;
-        });
-        cart.total = total;
-
-        if (item.itemQuantity === 0) {
-          console.log(button.getAttribute("id"));
-          document.querySelector(`td[id="${id}"]`).parentNode.remove();
-        }
+        button.setAttribute("data-quantity", item.itemQuantity - 1);
 
         // update UI
         button.parentElement.previousElementSibling.previousElementSibling.innerHTML =
-          item.itemQuantity; //quantity
+          parseInt(item.itemQuantity) - 1; //quantity
         button.parentElement.previousElementSibling.innerHTML =
-          parseFloat(item.itemPrice) * parseInt(item.itemQuantity); //price
-        localStorage.setItem("cart", JSON.stringify(cart));
+          parseFloat(item.itemPrice) * parseInt(item.itemQuantity) - 1; //price
+
+        updateCart(id, name, item.itemQuantity, (increase = false));
       });
     }
   });
@@ -128,7 +95,13 @@ document.querySelector("a span.items-count").innerHTML = localStorage
   .toString();
 
 // helper functions
-function updateCart(id, name, newQuantity) {
+function updateCart(id, name, newQuantity, increase) {
+  if (increase) {
+    newQuantity = parseInt(newQuantity) + 1;
+  } else {
+    newQuantity = parseInt(newQuantity) - 1;
+  }
+
   let cart = JSON.parse(localStorage.getItem("cart"));
 
   cart.cartItems.forEach((item) => {
