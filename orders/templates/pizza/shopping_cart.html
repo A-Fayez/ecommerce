@@ -32,8 +32,10 @@
     </tr>   {% endcomment %}
   </tbody>
 </table>
-    <button type="button" class="btn btn-success btn-sm checkout">Checkout</button>
-    <p class="total"></p>
+<div class="checkout-container">
+  <button type="button" class="btn btn-success btn-sm checkout btn-lg">Checkout</button>
+  <p class="total"></p>
+</div>
 {% endblock %}
 {% block footer %}
     <script src="{% static "js/cart.js" %}"></script>

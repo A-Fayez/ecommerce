@@ -45,6 +45,9 @@ document.addEventListener("DOMContentLoaded", () => {
     incDecColumn.appendChild(decButton);
   });
 
+  // After populating the table with the initial cart, update total ui
+  document.querySelector("p.total").innerHTML = `Total: ${cart.total} $`;
+
   // control increment and decrease of quantity items
   document.querySelectorAll("button.increase, button.decrease").forEach((button) => {
     // configure increase buttons
@@ -61,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
         button.parentElement.previousElementSibling.previousElementSibling.innerHTML =
           parseInt(item.itemQuantity) + 1; //quantity
         button.parentElement.previousElementSibling.innerHTML =
-          parseFloat(item.itemPrice) * parseInt(item.itemQuantity) + 1; //price
+          parseFloat(item.itemPrice) * (parseInt(item.itemQuantity) + 1); //price
 
         updateCart(id, name, item.itemQuantity, (increase = true));
       });
@@ -81,18 +84,13 @@ document.addEventListener("DOMContentLoaded", () => {
         button.parentElement.previousElementSibling.previousElementSibling.innerHTML =
           parseInt(item.itemQuantity) - 1; //quantity
         button.parentElement.previousElementSibling.innerHTML =
-          parseFloat(item.itemPrice) * parseInt(item.itemQuantity) - 1; //price
+          parseFloat(item.itemPrice) * (parseInt(item.itemQuantity) - 1); //price
 
         updateCart(id, name, item.itemQuantity, (increase = false));
       });
     }
   });
 });
-
-//update basket number
-document.querySelector("a span.items-count").innerHTML = localStorage
-  .getItem("cart-items-count")
-  .toString();
 
 // helper functions
 function updateCart(id, name, newQuantity, increase) {
@@ -118,4 +116,7 @@ function updateCart(id, name, newQuantity, increase) {
   });
   cart.total = total;
   localStorage.setItem("cart", JSON.stringify(cart));
+
+  // updata total ui
+  document.querySelector("p.total").innerHTML = `Total: ${total} $`;
 }

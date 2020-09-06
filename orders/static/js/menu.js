@@ -1,21 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
-  if (localStorage.getItem("cart-items-count")) {
-    document.querySelector("a span.items-count").innerHTML = localStorage
-      .getItem("cart-items-count")
-      .toString();
-  }
-
   let itemsCountElement = document.querySelector("a span.items-count").innerHTML;
   let itemsCount = parseInt(itemsCountElement);
   document.querySelectorAll("button.add-to-cart").forEach(function (button) {
     button.addEventListener("click", function () {
-      // update numbers of item in a cart
-      itemsCount++;
-      localStorage.setItem("cart-items-count", itemsCount);
-      document.querySelector("a span.items-count").innerHTML = localStorage
-        .getItem("cart-items-count")
-        .toString();
-
       // get the selected item info
       const quantitySelection = document.querySelector(`#${this.name}-select`);
       const itemQuantity = parseInt(
@@ -38,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let cart = getCart();
       addItemToCart(cartItem, cart);
       saveCart(cart);
+
       console.log(getCart);
       this.disabled = true;
       alert("Check your cart for extra modification");

@@ -62,3 +62,13 @@ button.increase,
 button.decrease {
   margin-right: 2em;
 }
+
+div.checkout-container {
+  display: flex;
+  justify-content: space-around;
+}
+
+button.checkout {
+  width: 20em;
+  font-size: 1em;
+}
