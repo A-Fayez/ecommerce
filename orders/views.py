@@ -120,6 +120,3 @@ def menu(request):
     }
     return render(request, "pizza/menu.html", context)
 
-
-def cart(request):
-    return render(request, "pizza/shopping_cart.html")
