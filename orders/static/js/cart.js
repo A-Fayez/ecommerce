@@ -46,30 +46,77 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // control increment and decrease of quantity items
-  // A bug in calculating total
   document.querySelectorAll("button.increase, button.decrease").forEach((button) => {
     // configure increase buttons
     if (button.classList.item(0) === "increase") {
       button.addEventListener("click", function () {
-        console.log("clicked inc");
-        let quantity = parseInt(this.getAttribute("data-quantity")) + 1;
-        button.setAttribute("data-quantity", quantity);
-        updateCart(this.getAttribute("id"), this.getAttribute("name"), quantity);
+        let cart = JSON.parse(localStorage.getItem("cart"));
+        const id = button.getAttribute("id");
+        const name = button.getAttribute("name");
+        let item = cart.cartItems.find((el) => el.itemName === name && el.itemID === id);
+        // let quantity = parseInt(item.itemQuantity) + 1;
+        button.setAttribute("data-quantity", item.itemQuantity);
+
+        // updateCart(id, name, quantity);
+        cart.cartItems.forEach((item) => {
+          if (item.itemID === id && item.itemName === name) {
+            item.itemQuantity = parseInt(item.itemQuantity) + 1;
+            item.totalPrice = item.itemPrice * parseInt(item.itemQuantity) + 1;
+          }
+        });
+        // update total and save cart state
+        let total = 0;
+        cart.cartItems.forEach((item) => {
+          total = total + item.totalPrice;
+        });
+        cart.total = total;
+
+        // update UI
+
+        button.parentElement.previousElementSibling.previousElementSibling.innerHTML =
+          item.itemQuantity; //quantity
+        button.parentElement.previousElementSibling.innerHTML =
+          parseFloat(item.itemPrice) * parseInt(item.itemQuantity); //price
+
+        localStorage.setItem("cart", JSON.stringify(cart));
       });
     } else if (button.classList.item(0) === "decrease") {
       // configure decrease button
       button.addEventListener("click", function () {
-        console.log("clicked inc");
+        let cart = JSON.parse(localStorage.getItem("cart"));
+        const id = button.getAttribute("id");
+        const name = button.getAttribute("name");
+        let item = cart.cartItems.find((el) => el.itemName === name && el.itemID === id);
+        console.log("clicked dec");
 
-        let quantity = parseInt(this.getAttribute("data-quantity")) - 1;
-        button.setAttribute("data-quantity", quantity);
-        updateCart(this.getAttribute("id"), this.getAttribute("name"), quantity);
-        if (quantity === 0 || quantity < 0) {
+        // let quantity = parseInt(item.itemQuantity) - 1;
+        button.setAttribute("data-quantity", item.itemQuantity);
+
+        // updateCart(id, name, quantity);
+        cart.cartItems.forEach((item) => {
+          if (item.itemID === id && item.itemName === name) {
+            item.itemQuantity = parseInt(item.itemQuantity) - 1;
+            item.totalPrice = item.itemPrice * parseInt(item.itemQuantity) - 1;
+          }
+        });
+        // update total and save cart state
+        let total = 0;
+        cart.cartItems.forEach((item) => {
+          total = total + item.totalPrice;
+        });
+        cart.total = total;
+
+        if (item.itemQuantity === 0) {
           console.log(button.getAttribute("id"));
-          document
-            .querySelector(`td[id="${button.getAttribute("id")}"]`)
-            .parentNode.remove();
+          document.querySelector(`td[id="${id}"]`).parentNode.remove();
         }
+
+        // update UI
+        button.parentElement.previousElementSibling.previousElementSibling.innerHTML =
+          item.itemQuantity; //quantity
+        button.parentElement.previousElementSibling.innerHTML =
+          parseFloat(item.itemPrice) * parseInt(item.itemQuantity); //price
+        localStorage.setItem("cart", JSON.stringify(cart));
       });
     }
   });
