@@ -1,0 +1,25 @@
+{% extends "pizza/base.html" %}
+{% load static %}
+{% block title %}Cart{% endblock title %}
+{% block body %}
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Product</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Price</th>
+      <th scope="col">Increment/decrease</th>
+    </tr>
+  </thead>
+  <tbody class="cart-table">
+
+  </tbody>
+</table>
+<div class="checkout-container">
+  <button type="button" class="btn btn-success btn-sm checkout btn-lg">Checkout</button>
+  <p class="total"></p>
+</div>
+{% endblock %}
+{% block footer %}
+    <script src="{% static "js/cart.js" %}"></script>
+{% endblock footer %}
