@@ -38,7 +38,7 @@
         <tbody>
           <tr id="{{item|cut:" "}}" name={{item}}>
             <td>{{item}}</td>
-            <td id="{{ item|cut:" "}}-price">{% firstof item.price "-" %}</td>
+            <td id="{{item|cut:" "}}-price">{% firstof item.price "-" %}</td>
             <td>
               <select id="{{item|cut:" "}}-select">
                 <option value="1">1</option>

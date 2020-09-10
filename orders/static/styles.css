@@ -72,3 +72,9 @@ button.checkout {
   width: 20em;
   font-size: 1em;
 }
+
+a span.items-count {
+  color: #ff4747;
+  font-size: larger;
+  font-weight: bolder;
+}

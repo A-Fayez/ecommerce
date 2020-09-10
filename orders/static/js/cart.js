@@ -1,9 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const itemsCount = parseInt(localStorage.getItem("cart-items-count"));
   let cart = JSON.parse(localStorage.getItem("cart"));
+  document.querySelector("a span.items-count").innerHTML = cart.cartItems.length;
+
   // populate cart table
   const table = document.querySelector("tbody.cart-table");
-
   // new item added to cart
   cart.cartItems.forEach(function (item) {
     const row = document.createElement("tr");
@@ -57,7 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const id = button.getAttribute("id");
         const name = button.getAttribute("name");
         let item = cart.cartItems.find((el) => el.itemName === name && el.itemID === id);
-        // let quantity = parseInt(item.itemQuantity) + 1;
         button.setAttribute("data-quantity", item.itemQuantity + 1);
 
         // update UI
@@ -75,9 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const id = button.getAttribute("id");
         const name = button.getAttribute("name");
         let item = cart.cartItems.find((el) => el.itemName === name && el.itemID === id);
-        console.log("clicked dec");
 
-        // let quantity = parseInt(item.itemQuantity) - 1;
         button.setAttribute("data-quantity", item.itemQuantity - 1);
 
         // update UI
@@ -119,4 +116,5 @@ function updateCart(id, name, newQuantity, increase) {
 
   // updata total ui
   document.querySelector("p.total").innerHTML = `Total: ${total} $`;
+  document.querySelector("a span.items-count").innerHTML = cart.cartItems.length;
 }
