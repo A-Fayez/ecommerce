@@ -10,8 +10,8 @@ class MenuItemTestCase(TestCase):
 
         c = Category.objects.create(name="Pizza")
         p = Category.objects.create(name="Pasta")
-        MenuItem.objects.create(name="test", price=10.0, category=c)
-        MenuItem.objects.create(name="foo", price=15.0, category=p)
+        a = MenuItem.objects.create(name="test", price=10.0, category=c, quantity=2)
+        b = MenuItem.objects.create(name="foo", price=15.0, category=p, quantity=2)
 
     def test_string_representation(self):
         a = MenuItem.objects.get(pk=1)
@@ -36,6 +36,12 @@ class MenuItemTestCase(TestCase):
         with self.assertRaises(ValidationError):
             a.clean()
             a.save()
+
+    def test_total_price(self):
+        a = MenuItem.objects.get(pk=1)
+        b = MenuItem.objects.get(pk=2)
+        self.assertEqual(a.total, 20.0)
+        self.assertEqual(b.total, 30.0)
 
 
 class ShoppingCartTestCase(TestCase):

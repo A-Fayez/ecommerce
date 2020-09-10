@@ -24,7 +24,7 @@ class MenuItem(models.Model):
 
     @property
     def total(self):
-        return float(self.price) * float(self.quantity)
+        return float(self.price) * self.quantity
 
     # A menu item must have at least a price
     def clean(self):
