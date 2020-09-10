@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib import admin
+
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
@@ -15,25 +17,31 @@ class Category(models.Model):
 class MenuItem(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     name = models.CharField(max_length=64)
-    small_price = models.DecimalField(
-        max_digits=5, decimal_places=2, blank=True, null=True, default=0.0
-    )
-    large_price = models.DecimalField(
-        max_digits=5, decimal_places=2, blank=True, null=True, default=0.0
-    )
     price = models.DecimalField(
-        max_digits=5, decimal_places=2, blank=True, null=True, default=0.0
+        max_digits=5, decimal_places=2, blank=False, null=False, default=0.0
     )
+    quantity = models.IntegerField(default=1)
+
+    @property
+    def total(self):
+        return float(self.price) * float(self.quantity)
 
     # A menu item must have at least a price
     def clean(self):
         super().clean()
+        if not self.quantity:
+            raise ValidationError(_("A menu Item must have at least a quantity of one"))
 
-        if not self.small_price and not self.large_price and not self.price:
+        if not self.price:
             raise ValidationError(_("A menu Item must have at least one price"))
 
     def __str__(self):
         return self.name
+
+
+class MenuItemInline(admin.TabularInline):
+    model = MenuItem
+    exclude = ["quantity"]
 
 
 class Extra(models.Model):
@@ -58,6 +66,23 @@ class OrderedItem(models.Model):
 class ShoppingCart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     items = models.ManyToManyField(MenuItem, related_name="ordered_items")
+    total = models.DecimalField(decimal_places=2, max_digits=5, default=0.0)
+
+    @property
+    def _total_from_items(self):
+        _total = 0
+        for item in self.items:
+            _total = _total + item.total
+        return _total
+
+    def clean(self):
+        super().clean()
+
+        if self._total_from_items != self.total:
+            raise ValidationError(_("Error: total price of items isn't consistent"))
+
+        if not self.items:
+            raise ValidationError(_("A shopping cart must have at least one item"))
 
     def __str__(self):
-        return f"Order made by: {self.user} and contains {list(self.items)}"
+        return f"Order made by: {self.user} and contains {self.items}"
