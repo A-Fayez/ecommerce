@@ -64,7 +64,7 @@ class OrderedItem(models.Model):
 
 # The table will contain info about all orders made by users
 class ShoppingCart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cart")
     items = models.ManyToManyField(MenuItem, related_name="ordered_items")
     total = models.DecimalField(decimal_places=2, max_digits=5, default=0.0)
 

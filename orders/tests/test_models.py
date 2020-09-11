@@ -10,8 +10,8 @@ class MenuItemTestCase(TestCase):
 
         c = Category.objects.create(name="Pizza")
         p = Category.objects.create(name="Pasta")
-        a = MenuItem.objects.create(name="test", price=10.0, category=c, quantity=2)
-        b = MenuItem.objects.create(name="foo", price=15.0, category=p, quantity=2)
+        MenuItem.objects.create(name="test", price=10.0, category=c, quantity=2)
+        MenuItem.objects.create(name="foo", price=15.0, category=p, quantity=2)
 
     def test_string_representation(self):
         a = MenuItem.objects.get(pk=1)
