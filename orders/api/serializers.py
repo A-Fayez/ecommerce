@@ -10,7 +10,7 @@ class ShoppingCartSerializer(serializers.HyperlinkedModelSerializer):
         fields = ["id", "items", "total"]
 
 
-class MenuItemSerialzer(serializers.HyperlinkedModelSerializer):
+class MenuItemSerializer(serializers.HyperlinkedModelSerializer):
     category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
 
     class Meta:
