@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth import login, logout, authenticate
-from orders.validators import (
+from .validators import (
     validate_login_key,
     LoginError,
     UsernameValidationError,

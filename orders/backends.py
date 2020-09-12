@@ -9,12 +9,12 @@ class EmailOrUsernameAuthBackend(BaseBackend):
 
     def authenticate(self, request, username=None, password=None):
         try:
-            user = User.objects.get(
+            _user = User.objects.get(
                 Q(username__iexact=username) | Q(email__iexact=username)
             )
 
-            if user.check_password(password):
-                return user
+            if _user.check_password(password):
+                return _user
 
         except User.DoesNotExist:
             return None
