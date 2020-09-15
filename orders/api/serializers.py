@@ -18,7 +18,7 @@ class MenuItemSerializer(serializers.HyperlinkedModelSerializer):
         fields = ["id", "category", "name", "price"]
 
 
-class CategoriesSerializer(serializers.HyperlinkedModelSerializer):
+class CategorySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Category
         fields = ["id", "name"]

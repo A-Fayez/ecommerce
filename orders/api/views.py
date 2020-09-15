@@ -4,7 +4,7 @@ from rest_framework import status
 
 
 from orders.models import Category, MenuItem
-from .serializers import CategoriesSerializer, MenuItemSerializer
+from .serializers import CategorySerializer, MenuItemSerializer
 
 
 class ShoppingCartAPIView(APIView):
@@ -38,8 +38,19 @@ class CategoriesAPIView(APIView):
     def get(self, request, *args, **kwargs):
         try:
             queryset = Category.objects.all()
-            serialzier = CategoriesSerializer(queryset, many=True)
+            serialzier = CategorySerializer(queryset, many=True)
         except Category.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         return Response(serialzier.data)
+
+
+class CategoryAPIView(APIView):
+    def get(self, request, pk):
+        try:
+            queryset = Category.objects.get(pk=pk)
+            serializer = CategorySerializer(queryset)
+        except Category.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        return Response(serializer.data)
