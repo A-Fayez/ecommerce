@@ -14,7 +14,6 @@ services:
   web:
     build: .
     container_name: web
-    entrypoint: /code/bin/build.sh
     volumes:
       - .:/code
     ports:

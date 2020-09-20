@@ -23,9 +23,8 @@ def index(request):
 
 def login_view(request):
     if request.method == "POST":
-        username = request.POST["username"]
+        username = request.POST["sername"]
         password = request.POST["password"]
-
         try:
             validate_login_key(username)  # Throws a LoginError
 

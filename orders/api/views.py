@@ -1,15 +1,18 @@
 from rest_framework.views import APIView
 from rest_framework.views import Response
 from rest_framework import status
-
+from rest_framework.permissions import IsAuthenticated
 
 from orders.models import Category, MenuItem
 from .serializers import CategorySerializer, MenuItemSerializer
 
 
 class ShoppingCartAPIView(APIView):
+
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request, *args, **kwargs):
-        pass
+        return Response({"test": "passed"})
 
 
 class ItemsAPIView(APIView):

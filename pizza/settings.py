@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework.authtoken",
+    "rest_auth",
 ]
 
 MIDDLEWARE = [
@@ -152,6 +153,8 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 
-# REST_FRAMEWORK = {
-#    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.TokenAuthentication"]
-# }
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication"
+    ]
+}
