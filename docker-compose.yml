@@ -18,8 +18,18 @@ services:
       - .:/code
     ports:
       - "8000:8000"
+    entrypoint: ./bin/build.sh
     depends_on: 
       - db
+  
+  test-web:
+    build:
+      context: .
+      dockerfile: Dockerfile.test 
+    container_name: test-web
+    volumes: 
+      - .:/code
+    command: python3 manage.py test
 
 volumes:
   pgdata:

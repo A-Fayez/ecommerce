@@ -5,6 +5,4 @@ WORKDIR /code
 ADD . /code
 RUN python -m pip install -r requirements.txt
 
-RUN cd /code
 RUN python manage.py test
-RUN flake8 .

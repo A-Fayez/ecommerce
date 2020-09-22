@@ -5,5 +5,3 @@ WORKDIR /code
 ADD requirements.txt /code
 ADD bin/build.sh /code/bin
 RUN python -m pip install -r requirements.txt
-
-ENTRYPOINT [ "./bin/build.sh"]
