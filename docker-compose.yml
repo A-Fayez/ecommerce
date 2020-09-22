@@ -22,14 +22,14 @@ services:
     depends_on: 
       - db
   
-  test-web:
-    build:
-      context: .
-      dockerfile: Dockerfile.test 
-    container_name: test-web
-    volumes: 
-      - .:/code
-    command: python3 manage.py test
+  #test-web:
+  #  build:
+  #    context: .
+  #    dockerfile: Dockerfile.test 
+  #  container_name: test-web
+  #  volumes: 
+  #    - .:/code
+  #  command: python3 manage.py test
 
 volumes:
   pgdata:

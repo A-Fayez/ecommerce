@@ -18,14 +18,14 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
 
 
 class MenuItemSerializer(serializers.ModelSerializer):
-    category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all())
-
     class Meta:
         model = MenuItem
-        fields = ["id", "category", "name", "price"]
+        fields = ["id", "name", "price"]
 
 
 class CategorySerializer(serializers.ModelSerializer):
+    menu_items = MenuItemSerializer(many=True, read_only=True)
+
     class Meta:
         model = Category
-        fields = ["id", "name"]
+        fields = ["id", "name", "menu_items"]
