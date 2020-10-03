@@ -26,12 +26,12 @@ class ShoppingCartAPIView(APIView):
         return Response(serialzier.data)
 
 
-class MenuItemList(generics.ListCreateAPIView):
+class MenuItemList(generics.ValidationError):
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
 
 
-class MenuItemDetail(generics.RetrieveUpdateDestroyAPIView):
+class MenuItemDetail(generics.RetrieveAPIView):
     queryset = MenuItem.objects.all()
     serializer_class = MenuItemSerializer
 
@@ -41,6 +41,6 @@ class CategoryList(generics.ListCreateAPIView):
     serializer_class = CategorySerializer
 
 
-class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
+class CategoryDetail(generics.RetrieveAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer

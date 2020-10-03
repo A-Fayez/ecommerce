@@ -12,16 +12,18 @@ class Category(models.Model):
         return self.name
 
 
-class MenuItem(models.Model):
-    category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, related_name="category"
-    )
+class Item(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     name = models.CharField(max_length=64)
     price = models.DecimalField(
         max_digits=5, decimal_places=2, blank=False, null=False, default=0.0
     )
 
-    # A menu item must have at least a price
+    class Meta:
+        abstract = True
+
+
+class MenuItem(Item):
     def clean(self):
         super().clean()
 
@@ -32,27 +34,9 @@ class MenuItem(models.Model):
         return self.name
 
 
-class CartItem(MenuItem, models.Model):
-    quantity = models.IntegerField(default=1)
-
-    @property
-    def total(self):
-        return float(self.price) * self.quantity
-
-    def clean(self):
-        super().clean()
-
-        if not self.quantity:
-            raise ValidationError(_("A Cart Item must have at least a quantity of one"))
-
-    def __str__(self):
-        return super().__str__()
-
-
 # The table will contain info about all orders made by users
 class ShoppingCart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="cart")
-    items = models.ManyToManyField(CartItem, related_name="cart_items")
     total = models.DecimalField(decimal_places=2, max_digits=5, default=0.0)
 
     @property
@@ -73,3 +57,21 @@ class ShoppingCart(models.Model):
 
     def __str__(self):
         return f"Order made by: {self.user} and contains {self.items}"
+
+
+class CartItem(Item):
+    quantity = models.IntegerField(default=1)
+    cart = models.ForeignKey(ShoppingCart, on_delete=models.CASCADE)
+
+    @property
+    def total(self):
+        return float(self.price) * self.quantity
+
+    def clean(self):
+        super().clean()
+
+        if not self.quantity:
+            raise ValidationError(_("A Cart Item must have at least a quantity of one"))
+
+    def __str__(self):
+        return super().__str__()

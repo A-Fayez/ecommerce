@@ -39,7 +39,6 @@ def login_view(request):
         except LoginError as e:
             print(e)
             return render(request, "pizza/login.html", {"invalid": True})
-
     return render(request, "pizza/login.html")
 
 

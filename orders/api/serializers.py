@@ -20,7 +20,7 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
 class MenuItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = MenuItem
-        fields = ["id", "name", "price"]
+        fields = ["id", "name", "price", "category"]
 
 
 class CategorySerializer(serializers.ModelSerializer):
