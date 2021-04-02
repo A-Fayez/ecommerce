@@ -4,7 +4,6 @@ from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 
 
-# Create your models here.
 class Category(models.Model):
     name = models.CharField(max_length=64)
 
@@ -13,6 +12,7 @@ class Category(models.Model):
 
 
 class MenuItem(models.Model):
+
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     name = models.CharField(max_length=64)
     small_price = models.DecimalField(
@@ -37,6 +37,7 @@ class MenuItem(models.Model):
 
 
 class Extra(models.Model):
+
     name = models.CharField(max_length=64)
     price = models.DecimalField(
         max_digits=5, decimal_places=2, blank=True, null=True, default=0.0
@@ -47,6 +48,7 @@ class Extra(models.Model):
 
 
 class OrderedItem(models.Model):
+
     item = models.ForeignKey(MenuItem, on_delete=models.CASCADE)
     extras = models.ManyToManyField(Extra, blank=True, related_name="extras")
 
@@ -56,6 +58,7 @@ class OrderedItem(models.Model):
 
 # The table will contain info about all orders made by users
 class ShoppingCart(models.Model):
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     items = models.ManyToManyField(MenuItem, related_name="ordered_items")
 
