@@ -8,28 +8,15 @@ services:
       - POSTGRES_NAME=postgres
       - POSTGRES_USER=postgres 
       - POSTGRES_PASSWORD=postgres
-    volumes:
-      - pgdata:/var/lib/postgresql/data
 
   web:
     build: .
     container_name: web
+    entrypoint: /code/bin/build.sh
     volumes:
       - .:/code
     ports:
       - "8000:8000"
-    command: ./bin/build.sh
     depends_on: 
       - db
-  
-  #test-web:
-  #  build:
-  #    context: .
-  #    dockerfile: Dockerfile.test 
-  #  container_name: test-web
-  #  volumes: 
-  #    - .:/code
-  #  command: python3 manage.py test
 
-volumes:
-  pgdata:

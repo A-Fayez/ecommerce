@@ -9,14 +9,11 @@ from .validators import (
     UsernameValidationError,
     EmailValidationError,
 )
-from .models import (
-    Category,
-    MenuItem,
-)
 from .validators import validate_email_address, validate_username
 
-
 # Create your views here.
+
+
 def index(request):
     return render(request, "pizza/homepage.html")
 
@@ -97,26 +94,26 @@ def register(request):
 
 # cache menu daily
 # @cache_page(24 * 60 * 60)
-def menu(request):
-    # print(request.COOKIES["sessionid"])
+# def menu(request):
+#     # print(request.COOKIES["sessionid"])
 
-    menu_dict = {}
-    items = MenuItem.objects.all()
-    categories = Category.objects.all()
+#     menu_dict = {}
+#     items = MenuItem.objects.all()
+#     categories = Category.objects.all()
 
-    for category in categories:
-        menu_dict.update(
-            {
-                category.name: items.filter(
-                    category_id=Category.objects.get(name=category.name).pk
-                )
-            }
-        )
+#     for category in categories:
+#         menu_dict.update(
+#             {
+#                 category.name: items.filter(
+#                     category_id=Category.objects.get(name=category.name).pk
+#                 )
+#             }
+#         )
 
-    context = {
-        "menu": menu_dict,
-    }
-    return render(request, "pizza/menu.html", context)
+#     context = {
+#         "menu": menu_dict,
+#     }
+#     return render(request, "pizza/menu.html", context)
 
 
 def cart(request):
