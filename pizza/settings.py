@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # "rest_framework",
+    "rest_framework",
     # "rest_framework.authtoken",
     # "rest_auth",
 ]
@@ -55,6 +55,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "pizza.urls"
+APPEND_SLASH = True
 
 
 AUTHENTICATION_BACKENDS = [
