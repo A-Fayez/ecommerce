@@ -1,5 +1,6 @@
 __pycache__
 db.sqlite3
+postgres
 .idea
 pg-data
 .devcontainer
