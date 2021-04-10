@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=64, unique=True)
 
     def __str__(self):
         return self.name
@@ -13,7 +13,8 @@ class Category(models.Model):
 
 class Product(models.Model):
 
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(
+        Category, on_delete=models.CASCADE, related_name="products")
     name = models.CharField(max_length=64)
     price = models.DecimalField(max_digits=5, decimal_places=2, blank=False, null=False)
 
@@ -26,6 +27,9 @@ class Product(models.Model):
 
     def __str__(self):
         return f"Name: {self.name} - category: {self.category} - price: {self.price}"
+
+    def __unicode__(self):
+        return f"{self.name}"
 
 
 class Cart(models.Model):
