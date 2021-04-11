@@ -1,6 +1,7 @@
 from rest_framework import generics
-from orders.models import Category, Product, Cart, CartItem
-from .serializers import CategorySerializer, ProductSerializer, CartSerialzer, CartItemSerializer
+from orders.models import Category, Product, Cart
+from .serializers import (CategorySerializer, ProductSerializer,
+                          CartSerialzer,)
 
 
 class CategoryDetail(generics.RetrieveAPIView):
