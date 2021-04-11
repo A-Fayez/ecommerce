@@ -3,8 +3,12 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
+import uuid
+
 
 class Category(models.Model):
+    id = models.UUIDField(unique=True, default=uuid.uuid4,
+                          editable=False, primary_key=True)
     name = models.CharField(max_length=64, unique=True)
 
     def __str__(self):
@@ -12,6 +16,8 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+    id = models.UUIDField(unique=True, default=uuid.uuid4,
+                          editable=False, primary_key=True)
 
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, related_name="products")
@@ -33,6 +39,8 @@ class Product(models.Model):
 
 
 class Cart(models.Model):
+    id = models.UUIDField(unique=True, default=uuid.uuid4,
+                          editable=False, primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date_created = models.DateField()
     checked_out = models.BooleanField()
@@ -43,9 +51,11 @@ class Cart(models.Model):
 
 
 class CartItem(models.Model):
+    id = models.UUIDField(unique=True, default=uuid.uuid4,
+                          editable=False, primary_key=True)
     product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="items")
-    quantity = models.IntegerField()
+    quantity = models.IntegerField(blank=False, null=False, default=1)
     price = models.DecimalField(max_digits=5, decimal_places=2, blank=False, null=False)
 
     @property

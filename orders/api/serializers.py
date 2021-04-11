@@ -23,12 +23,13 @@ class CartItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CartItem
-        fields = ["product", "price", "quantity", "total"]
+        fields = ["id", "product", "price", "quantity", "total"]
 
 
-class CartSerialzer(serializers.ModelSerializer):
+class CartSerialzer(
+        serializers.ModelSerializer):
     items = CartItemSerializer(many=True)
 
     class Meta:
         model = Cart
-        fields = ["user", "date_created", "checked_out", "items"]
+        fields = ["id", "user", "date_created", "checked_out", "items"]

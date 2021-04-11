@@ -24,11 +24,11 @@ class ProductDetails(generics.RetrieveAPIView):
     serializer_class = ProductSerializer
 
 
-class CartList(generics.ListAPIView):
+class CartList(generics.ListCreateAPIView):
     queryset = Cart.objects.all()
     serializer_class = CartSerialzer
 
 
-class CartDetail(generics.RetrieveAPIView):
+class CartDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Cart.objects.all()
     serializer_class = CartSerialzer
