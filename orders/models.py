@@ -24,7 +24,10 @@ class Product(models.Model):
     name = models.CharField(max_length=64)
     price = models.DecimalField(max_digits=5, decimal_places=2, blank=False, null=False)
 
-    # A menu item must have at least a price
+    class Meta:
+        constraints = [models.UniqueConstraint(
+            fields=["name", "category"], name="unique product name per category")]
+
     def clean(self):
         super().clean()
 
@@ -43,7 +46,7 @@ class Cart(models.Model):
                           editable=False, primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     date_created = models.DateField()
-    checked_out = models.BooleanField()
+    checked_out = models.BooleanField(default=False)
 
     def __str__(self):
         return f"user: {self.user} - date: {self.date_created} - \
@@ -53,7 +56,7 @@ class Cart(models.Model):
 class CartItem(models.Model):
     id = models.UUIDField(unique=True, default=uuid.uuid4,
                           editable=False, primary_key=True)
-    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING)
+    product = models.ForeignKey(Product, on_delete=models.DO_NOTHING, null=False)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="items")
     quantity = models.IntegerField(blank=False, null=False, default=1)
     price = models.DecimalField(max_digits=5, decimal_places=2, blank=False, null=False)
