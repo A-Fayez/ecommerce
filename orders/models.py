@@ -45,12 +45,21 @@ class Cart(models.Model):
     id = models.UUIDField(unique=True, default=uuid.uuid4,
                           editable=False, primary_key=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    date_created = models.DateField()
+    date_created = models.DateField(auto_now_add=True)
     checked_out = models.BooleanField(default=False)
 
     def __str__(self):
         return f"user: {self.user} - date: {self.date_created} - \
                 checked out: {self.checked_out}"
+
+    @property
+    def total(self):
+        if not self.items:
+            return 0.00
+
+        return sum(item.total for item in self.items.all())
+
+    # TODO: add total property
 
 
 class CartItem(models.Model):
