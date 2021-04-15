@@ -1,10 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
-  let itemsCountElement = document.querySelector("a span.items-count").innerHTML;
-  let itemsCount = parseInt(itemsCountElement);
+  // update basket UI
+  if (localStorage.getItem("cart")) {
+    let cart = JSON.parse(localStorage.getItem("cart"));
+    document.querySelector("a span.items-count").innerHTML = cart.cartItems.length;
+  }
+
   document.querySelectorAll("button.add-to-cart").forEach(function (button) {
     button.addEventListener("click", function () {
       // get the selected item info
-      const quantitySelection = document.querySelector(`#${this.name}-select`);
+      console.log(`#${this.name}-select`);
+
+      const quantitySelection = document.querySelector(
+        `select#${this.name}-select`.trim()
+      );
       const itemQuantity = parseInt(
         quantitySelection.options[quantitySelection.selectedIndex].value
       );

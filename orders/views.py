@@ -3,20 +3,17 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.contrib.auth import login, logout, authenticate
-from orders.validators import (
+from .validators import (
     validate_login_key,
     LoginError,
     UsernameValidationError,
     EmailValidationError,
 )
-from .models import (
-    Category,
-    MenuItem,
-)
 from .validators import validate_email_address, validate_username
 
-
 # Create your views here.
+
+
 def index(request):
     return render(request, "pizza/homepage.html")
 
@@ -25,7 +22,6 @@ def login_view(request):
     if request.method == "POST":
         username = request.POST["username"]
         password = request.POST["password"]
-
         try:
             validate_login_key(username)  # Throws a LoginError
 
@@ -40,7 +36,6 @@ def login_view(request):
         except LoginError as e:
             print(e)
             return render(request, "pizza/login.html", {"invalid": True})
-
     return render(request, "pizza/login.html")
 
 
@@ -99,26 +94,26 @@ def register(request):
 
 # cache menu daily
 # @cache_page(24 * 60 * 60)
-def menu(request):
-    # print(request.COOKIES["sessionid"])
+# def menu(request):
+#     # print(request.COOKIES["sessionid"])
 
-    menu_dict = {}
-    items = MenuItem.objects.all()
-    categories = Category.objects.all()
+#     menu_dict = {}
+#     items = MenuItem.objects.all()
+#     categories = Category.objects.all()
 
-    for category in categories:
-        menu_dict.update(
-            {
-                category.name: items.filter(
-                    category_id=Category.objects.get(name=category.name).pk
-                )
-            }
-        )
+#     for category in categories:
+#         menu_dict.update(
+#             {
+#                 category.name: items.filter(
+#                     category_id=Category.objects.get(name=category.name).pk
+#                 )
+#             }
+#         )
 
-    context = {
-        "menu": menu_dict,
-    }
-    return render(request, "pizza/menu.html", context)
+#     context = {
+#         "menu": menu_dict,
+#     }
+#     return render(request, "pizza/menu.html", context)
 
 
 def cart(request):
