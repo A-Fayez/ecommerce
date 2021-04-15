@@ -59,8 +59,6 @@ class Cart(models.Model):
 
         return sum(item.total for item in self.items.all())
 
-    # TODO: add total property
-
 
 class CartItem(models.Model):
     id = models.UUIDField(unique=True, default=uuid.uuid4,

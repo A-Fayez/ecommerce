@@ -1,6 +1,5 @@
 from orders.models import Product, Category, Cart, CartItem
 from rest_framework import serializers
-from drf_writable_nested.serializers import WritableNestedModelSerializer
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -69,7 +68,6 @@ class CartSerialzer(serializers.ModelSerializer):
         # TODO: implement this in a more efficient way
         # Either implement a diffing algorithm or use event sourcing
         CartItem.objects.filter(cart=instance).delete()
-
         for cart_item in validated_data.get("items"):
             try:
                 product_id = cart_item.get("product").get("id")
