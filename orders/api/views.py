@@ -1,7 +1,11 @@
 from rest_framework import generics, permissions
+from rest_framework.views import APIView
 from orders.models import Category, Product, Cart
+from rest_framework.response import Response
+from rest_framework import status
+from django.contrib.auth.models import User
 from .serializers import (CategorySerializer, ProductSerializer,
-                          CartSerialzer,)
+                          CartSerialzer, UserSerializer)
 
 
 class IsOwner(permissions.BasePermission):
@@ -43,3 +47,8 @@ class CartDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticated, IsOwner)
     queryset = Cart.objects.all()
     serializer_class = CartSerialzer
+
+
+class UserDetail(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
