@@ -75,3 +75,11 @@ class CartItem(models.Model):
     def __str__(self):
         return f"items: {self.product} - price: {self.price} \
                 - quantity: {self.quantity}"
+
+
+class Payment(models.Model):
+    id = models.UUIDField(unique=True, default=uuid.uuid4,
+                          editable=False, primary_key=True)
+    cart = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.DecimalField(
+        max_digits=5, decimal_places=2, blank=False, null=False)

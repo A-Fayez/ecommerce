@@ -1,7 +1,17 @@
-from rest_framework import generics, permissions
-from orders.models import Category, Product, Cart
+from rest_framework import generics, permissions, status
+from rest_framework.views import APIView
+from orders.models import Category, Product, Cart, Payment
+from django.contrib.auth.models import User
 from .serializers import (CategorySerializer, ProductSerializer,
-                          CartSerialzer,)
+                          CartSerialzer, UserSerializer,)
+from rest_framework.response import Response
+
+
+import stripe
+import os
+import math
+
+stripe.api_key = os.environ.get("STRIPE_API_KEY")
 
 
 class IsOwner(permissions.BasePermission):
@@ -11,6 +21,34 @@ class IsOwner(permissions.BasePermission):
 
     def has_object_permission(self, request, view, obj):
         return obj.user == request.user
+
+
+class PaymentView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        cart_id = request.data.get("cart_id")
+        amount = request.data.get("amount")
+
+        try:
+            cart = Cart.objects.get(id=cart_id)
+        except Cart.DoesNotExist:
+            return Response({"message": "cart does not exist"},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        stripe.PaymentIntent.create(
+            amount=math.ceil(cart.total),
+            currency='gbp',
+            payment_method_types=['card'],
+            receipt_email=self.request.user.email,
+        )
+
+        Payment.objects.create(cart=cart, amount=amount)
+
+        return Response({
+            "message":
+            "You've successfuly completed payment"},
+            status=status.HTTP_201_CREATED)
 
 
 class CategoryDetail(generics.RetrieveAPIView):
@@ -43,3 +81,8 @@ class CartDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticated, IsOwner)
     queryset = Cart.objects.all()
     serializer_class = CartSerialzer
+
+
+class UserDetail(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
