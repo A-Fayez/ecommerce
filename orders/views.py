@@ -11,8 +11,6 @@ from .validators import (
 )
 from .validators import validate_email_address, validate_username
 
-# Create your views here.
-
 
 def index(request):
     return render(request, "pizza/homepage.html")

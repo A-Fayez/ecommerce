@@ -3,8 +3,9 @@ from rest_framework.views import APIView
 from orders.models import Category, Product, Cart, Payment
 from django.contrib.auth.models import User
 from .serializers import (CategorySerializer, ProductSerializer,
-                          CartSerialzer, UserSerializer,)
+                          CartSerialzer,)
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 import stripe
@@ -43,12 +44,30 @@ class PaymentView(APIView):
             receipt_email=self.request.user.email,
         )
 
+        cart.checked_out = True
         Payment.objects.create(cart=cart, amount=amount)
 
         return Response({
             "message":
             "You've successfuly completed payment"},
             status=status.HTTP_201_CREATED)
+
+
+class UserDetail(APIView):
+    def post(self, request, *args, **kwargs):
+        if not request.data["username"] \
+                or not request.data["password"] \
+                or not request.data["first_name"] \
+                or not request.data["last_name"]:
+
+            return Response({"message": "Missing required fields for registration"},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        user = User.objects.create(username=request.data["username"], password=request.data["password"],
+                                   first_name=request.data["first_name"], last_name=request.data["last_name"])
+
+        token = RefreshToken.for_user(user)
+        return Response({"refresh": str(token), "access": str(token.access_token)})
 
 
 class CategoryDetail(generics.RetrieveAPIView):
@@ -81,8 +100,3 @@ class CartDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticated, IsOwner)
     queryset = Cart.objects.all()
     serializer_class = CartSerialzer
-
-
-class UserDetail(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
