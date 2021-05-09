@@ -25,6 +25,8 @@ class IsOwner(permissions.BasePermission):
 
 
 class PaymentView(APIView):
+    throttle_scope = "payment"
+
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
@@ -54,6 +56,8 @@ class PaymentView(APIView):
 
 
 class UserDetail(APIView):
+    throttle_scope = "register"
+
     def post(self, request, *args, **kwargs):
         if not request.data["username"] \
                 or not request.data["password"] \
